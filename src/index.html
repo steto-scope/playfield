@@ -62,6 +62,55 @@
                   </table>
                 </div>
               </fieldset>
+              <fieldset>
+                <legend>Operation <span class="op1name"></span> auf <span class="structSetName"></span></legend>
+                <div class="fscontent">
+                  <br><br>
+                  <table>
+                    <tr>
+                      <th>Operatorsymbol:</th>
+                      <td>
+                        <select id="op1symbol">
+                          <optgroup label="additiv">
+                            <option>+</option>
+                            <option>⊕</option>
+                            <option>⊞</option>
+                            <option>⨹</option>
+                            <option>-</option>
+                            <option>⊖</option>
+                            <option>⊟</option>
+                            <option>⨺</option>
+                          </optgroup>
+                          <optgroup label="multiplikativ">
+                            <option>*</option>
+                            <option>⋆</option>
+                            <option>×</option>
+                            <option>⊛</option>
+                            <option>⊗</option>
+                            <option>⊠</option>
+                            <option>⨻</option>
+                            <option>÷</option>
+                          </optgroup>
+                          <optgroup label="Sonne, Mond und Kringel">
+                            <option>∘</option>
+                            <option>∙</option>
+                            <option>⋅</option>
+                            <option>⊙</option>
+                            <option>⊚</option>
+                            <option>⊡</option>
+                            <option>⋄</option>
+                          </optgroup>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>JavaScript-Formel:</th>
+                      <td><input type="text" id="op1formula" size="25"></input><br>
+                      <span class="footnote">a: Linker Operand<br>b: Rechter Operand<br>n: Mächtigkeit der Menge<br>%: Modulo-Operator</span></td>
+                    </tr>
+                  </table>
+                </div>
+              </fieldset>
             </div>
           </div>
         </div>
@@ -136,7 +185,6 @@
  <script>
 
 
-
 var structureList = [];
 var c;
 function current() {
@@ -190,6 +238,10 @@ function updateFields()
   $(".structSetName").html(s.set.getSymbol());
   $(".structSetCard").html(s.set.n);
   $("#setSymbol")[0].value = s.set.symbol;
+  $(".op1name").html(s.opSymbol);
+  $("#op1formula")[0].value = s.opStr;
+  $("#op1symbol").val(s.opSymbol);
+  $("#op1symbol").selectmenu("refresh");
 }
 
 function sl_addNew(n,name,add,mul)
@@ -340,6 +392,12 @@ about = $( "#about" ).dialog({
  });
  $("#setSymbol").on( "change", function( event ) {
    current().set.setSymbol($(this)[0].value);
+   updateFields();
+   update_sl(false);
+ });
+ $("#op1symbol").selectmenu().selectmenu( "menuWidget" ).addClass("selectdropdown");
+  $("#op1symbol").on("selectmenuchange", function( event ) {
+   current().setOpSymbol($(this)[0].value);
    updateFields();
    update_sl(false);
  });

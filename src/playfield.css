@@ -25,6 +25,7 @@ fieldset {
 }
 .structureTab th {
 	text-align: left;
+	vertical-align: top;
 }
 .structureTab legend {
 	background-color:#eee;
@@ -34,8 +35,14 @@ fieldset {
 	width:80vw;
 	font-size: 1.5em;
 }
+.selectdropdown {
+      height: 200px;
+    }
 .fscontent {
 	margin:1.5em;
+}
+.footnote {
+	font-size: 0.7em;
 }
 
 

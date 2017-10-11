@@ -7,7 +7,12 @@ OneOpStructure = function(s)
 
   this.opStr = "(a+b)%n";
   this.opSymbol="⊕";
+  this.setOpSymbol= function(symbol){
+    if(symbol.length > 0)
+      this.opSymbol = symbol;
+  }
   this.t = [];
+
 
   this.op = function(a,b,n=this.set.n)
   {
