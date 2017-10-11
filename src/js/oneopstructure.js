@@ -11,10 +11,10 @@ OneOpStructure = function(s)
   this.op = function(a,b,n=this.set.n)
   {
     return eval(this.opStr);
-   };
+  };
 
    this.toString = function(){
-     return "("+this.name+","+this.opSymbol+")";
+     return this.name + " = ("+this.set.getName()+","+this.opSymbol+")";
    };
 
    this.setElements = function(elements) {

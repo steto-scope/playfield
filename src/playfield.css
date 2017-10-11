@@ -10,7 +10,7 @@ fieldset {
 /* content area */
 .content {
 	width:85vw;
-	height:100vh;
+	/*height:100vh;*/
 	margin-left: 15vw;
 	background-color:#eee;
 }
@@ -22,13 +22,22 @@ fieldset {
 /* left bar navigation */
 .navi {
 	width:15vw;
-	height:100vh;
+	/*height:100vh;*/
 	float:left;
 	border-right:#ddd solid 1px;
 }
 
 .logo {
 	margin-bottom: 50px;
+}
+
+.content {
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+.content #mainStructureTab {
+	height:90vh;
 }
 
 .controls {

@@ -32,32 +32,40 @@
           </div>
           <input type="button" id="aboutButton" value="Über..."></input>
         </div>
-
       </div>
       <div class="content">
-        <div class="newStructure ui-widget" id="createNewDialog" title="Neue Struktur">
-          <form>
-              <fieldset>
-                <p>
-                <label for="name">Name: </label>
-                <input type="text" name="name" id="name" size="2" value="G" class="text ui-widget-content ui-corner-all">
-              </p>
-              <p>
-                <label for="n">Anzahl Elemente: </label>
-                <input id="n" value="2" size="2">
-              </p>
-              <p>
-                <div class="controlgroup" style="display:none;">
-                  <label for="addop">Addition</label>
-                  <input type="checkbox" id="addop" name="opgroup" checked>
-                  <label for="mulop">Multiplikation</label>
-                  <input type="checkbox" id="mulop" name="opgroup">
-                </div>
-              </p>
-                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-              </fieldset>
-            </form>
+
+        <div id="maintabs">
+          <ul>
+            <li><a href="#mainStructureTab">Struktur</a></li>
+          </ul>
+          <div class="structureTab" id="mainStructureTab">
+            fdg
+          </div>
         </div>
+      </div>
+      <div class="newStructure ui-widget" id="createNewDialog" title="Neue Struktur">
+        <form>
+            <fieldset>
+              <p>
+              <label for="name">Name: </label>
+              <input type="text" name="name" id="name" size="2" value="G" class="text ui-widget-content ui-corner-all">
+            </p>
+            <p>
+              <label for="n">Anzahl Elemente: </label>
+              <input id="n" value="2" size="2">
+            </p>
+            <p>
+              <div class="controlgroup" style="display:none;">
+                <label for="addop">Addition</label>
+                <input type="checkbox" id="addop" name="opgroup" checked>
+                <label for="mulop">Multiplikation</label>
+                <input type="checkbox" id="mulop" name="opgroup">
+              </div>
+            </p>
+              <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+          </form>
       </div>
       <div  class=" ui-widget" id="about" title="Über">
         <h1>Galois' Playfield</h1>
@@ -132,7 +140,7 @@ function nameSuggestion()
 
 function structChanged()
 {
-
+  console.log("change");
 }
 
 function sl_addNew(n,name,add,mul)
@@ -166,6 +174,8 @@ function update_sl() {
 
 }
 
+
+/* add structure */
  var dialog, form, about;
 
 function addStructure() {
@@ -198,6 +208,20 @@ dialog = $( "#createNewDialog" ).dialog({
 });
 $( "#createNewDialog" ).on( "dialogopen", function( event, ui ) { $( "#name" )[0].value = nameSuggestion(); } );
 
+
+form = dialog.find( "form" ).on( "submit", function( event ) {
+  event.preventDefault();
+  addStructure();
+});
+$("#n").spinner();
+$("#n").spinner('option', 'min',0);
+$("#n").spinner('option', 'max',32);
+$("#addop").checkboxradio({icon:false});
+$("#mulop").checkboxradio({icon:false});
+$(".controlgroup").controlgroup();
+
+
+/* about box */
 about = $( "#about" ).dialog({
   autoOpen: false,
   height: 600,
@@ -215,19 +239,8 @@ about = $( "#about" ).dialog({
   }
 });
 
-form = dialog.find( "form" ).on( "submit", function( event ) {
-  event.preventDefault();
-  addStructure();
-});
 
-$("#n").spinner();
-$("#n").spinner('option', 'min',0);
-$("#n").spinner('option', 'max',32);
-$("#addop").checkboxradio({icon:false});
-$("#mulop").checkboxradio({icon:false});
-$(".controlgroup").controlgroup();
-
-
+/* main navigation buttons */
  $("#newStructure").button();
  $("#newStructure").click( function( event )  {
    event.preventDefault();
@@ -244,6 +257,10 @@ $(".controlgroup").controlgroup();
    event.preventDefault();
    about.dialog("open");
  } );
+
+
+ /* main content area */
+ $("#maintabs").tabs();
 
   </script>
 </html>
