@@ -6,12 +6,20 @@ fieldset {
  border:none;
 }
 
+
+/* content area */
 .content {
 	width:85vw;
 	height:100vh;
 	margin-left: 15vw;
 	background-color:#eee;
 }
+
+
+
+
+
+/* left bar navigation */
 .navi {
 	width:15vw;
 	height:100vh;
@@ -26,15 +34,12 @@ fieldset {
 .controls {
 	text-align: center;
 }
-.controls .buttons {
-
-}
 
 #structSelection {
 	outline:none;
 	width:15vw;
 	border:none;
-	overflow:hidden;
+	overflow:auto;
 }
 
 #structSelection option {
@@ -50,6 +55,7 @@ fieldset {
 
 
 
+/* about section */
 #about h1, #about h5{
 	text-align:center;
 }

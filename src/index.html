@@ -107,6 +107,29 @@ function s() {
   return structureList[document.getElementById('structSelection').value];
 }
 
+function nameSuggestion()
+{
+  var suggestion = "A";
+  var used = false;
+  do
+  {
+    used=false;
+    for(var i=0; i<structureList.length; i++)
+    {
+      if(structureList[i].name == suggestion)
+        {
+          used = true;
+          break;
+        }
+    }
+    if(used)
+      suggestion = String.fromCharCode(suggestion.charCodeAt()+1);
+  }
+  while(used);
+
+  return suggestion;
+}
+
 function structChanged()
 {
 
@@ -162,8 +185,6 @@ function addStructure() {
 
 dialog = $( "#createNewDialog" ).dialog({
   autoOpen: false,
-  /*height: 400,
-  width: 350,*/
   modal: true,
   buttons: {
     "Erzeugen": addStructure,
@@ -175,6 +196,7 @@ dialog = $( "#createNewDialog" ).dialog({
     form[ 0 ].reset();
   }
 });
+$( "#createNewDialog" ).on( "dialogopen", function( event, ui ) { $( "#name" )[0].value = nameSuggestion(); } );
 
 about = $( "#about" ).dialog({
   autoOpen: false,
@@ -211,6 +233,7 @@ $(".controlgroup").controlgroup();
    event.preventDefault();
    dialog.dialog("open");
  } );
+
  $("#delStructure").button();
  $("#delStructure").click( function( event )  {
    event.preventDefault();
