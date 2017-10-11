@@ -17,10 +17,14 @@ fieldset {
 
 .ElCaption {
 	font-size: 1.5em;
+
 }
 
 .structureTab fieldset {
 
+}
+.structureTab th {
+	text-align: left;
 }
 .structureTab legend {
 	background-color:#eee;

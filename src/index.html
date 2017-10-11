@@ -45,10 +45,19 @@
                 <legend>Menge von <span class="structName"></span></legend>
                 <div class="fscontent">
                   <span class="ElCaption" id="elementsStr"></span>
+                  <br><br>
                   <table>
+                    <tr>
+                      <th>Mächtigkeit:</th>
+                      <td>#<span class="structSetName"></span> = <span class="structSetCard"></span></td>
+                    </tr>
                     <tr>
                       <th>Elemente:</th>
                       <td><input type="text" id="elements" size="25"></input></td>
+                    </tr>
+                    <tr>
+                      <th>Mengensymbol:</th>
+                      <td><input type="text" id="setSymbol" size="2" maxlength="1"></input></td>
                     </tr>
                   </table>
                 </div>
@@ -178,6 +187,9 @@ function updateFields()
   $("#elementsStr")[0].innerHTML = s.set;
   $("#elements")[0].value = s.set.toString("elements");
   $(".structName").html(s.getName());
+  $(".structSetName").html(s.set.getSymbol());
+  $(".structSetCard").html(s.set.n);
+  $("#setSymbol")[0].value = s.set.symbol;
 }
 
 function sl_addNew(n,name,add,mul)
@@ -323,6 +335,11 @@ about = $( "#about" ).dialog({
  /* structure tab */
  $("#elements").on( "change", function( event ) {
    current().setElements($(this)[0].value);
+   updateFields();
+   update_sl(false);
+ });
+ $("#setSymbol").on( "change", function( event ) {
+   current().set.setSymbol($(this)[0].value);
    updateFields();
    update_sl(false);
  });

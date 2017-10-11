@@ -15,7 +15,7 @@ OneOpStructure = function(s)
   };
 
    this.toString = function(){
-     return this.name + " = ("+this.set.getName()+","+this.opSymbol+")";
+     return this.name + " = ("+this.set.getSymbol()+","+this.opSymbol+")";
    };
 
    this.setElements = function(elements) {

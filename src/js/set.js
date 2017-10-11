@@ -5,7 +5,12 @@ Set = function()
   this.n = 0;
 
   this.symbol = "ℤ";
-  this.getName = function(html)
+  this.setSymbol = function(symbol) {
+    if(symbol.length > 0)
+      this.symbol = symbol;
+  };
+
+  this.getSymbol = function(html)
   {
     if(this.symbol=="ℤ")
     {
@@ -26,7 +31,7 @@ Set = function()
       case "elements":
         return this.e.join(", ");
       default:
-        return this.getName(true)+" = {"+this.e.join(", ")+"}";
+        return this.getSymbol(true)+" = {"+this.e.join(", ")+"}";
     }
   };
 
