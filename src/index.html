@@ -37,10 +37,23 @@
 
         <div id="maintabs">
           <ul>
-            <li><a href="#mainStructureTab">Struktur</a></li>
+            <li><a href="#mainStructureTab">Einstellungen von <span class="structName"></span></a></li>
           </ul>
           <div class="structureTab" id="mainStructureTab">
-            fdg
+            <div class="setSettings">
+              <fieldset>
+                <legend>Menge von <span class="structName"></span></legend>
+                <div class="fscontent">
+                  <span class="ElCaption" id="elementsStr"></span>
+                  <table>
+                    <tr>
+                      <th>Elemente:</th>
+                      <td><input type="text" id="elements" size="25"></input></td>
+                    </tr>
+                  </table>
+                </div>
+              </fieldset>
+            </div>
           </div>
         </div>
       </div>
@@ -74,7 +87,7 @@
           <table>
             <tr>
               <th>Version:</th>
-              <td>0.1</td>
+              <td>0.2</td>
             </tr>
             <tr>
               <th>Autor:</th>
@@ -95,6 +108,12 @@
         <br>
         <ul>
           <li>
+            <strong>v0.2</strong>
+            <ul>
+              <li>Editieren der Struktur-Menge</li>
+            </ul>
+          </li>
+          <li>
             <strong>v0.1</strong>
             <ul>
               <li>Anlegen von Strukturen mit 1 Operator</li>
@@ -110,9 +129,9 @@
 
 
 var structureList = [];
-
-function s() {
-  return structureList[document.getElementById('structSelection').value];
+var c;
+function current() {
+  return c;//structureList[document.getElementById('structSelection').value];
 }
 
 function nameSuggestion()
@@ -140,7 +159,25 @@ function nameSuggestion()
 
 function structChanged()
 {
-  console.log("change");
+  c = structureList[document.getElementById('structSelection').value];
+  if($("#structSelection")[0].selectedIndex < 0)
+  {
+    $("#maintabs").hide();
+  }
+  else
+  {
+    $("#maintabs").show();
+    updateFields();
+  }
+}
+
+function updateFields()
+{
+  var s = current();
+
+  $("#elementsStr")[0].innerHTML = s.set;
+  $("#elements")[0].value = s.set.toString("elements");
+  $(".structName").html(s.getName());
 }
 
 function sl_addNew(n,name,add,mul)
@@ -156,21 +193,41 @@ function sl_addNew(n,name,add,mul)
     structureList.push(g);
   }
   update_sl();
+  structChanged();
 }
 
 function sl_delete(index)
 {
   structureList.splice(index,1);
   update_sl();
+  updateFields();
 }
 
-function update_sl() {
+function update_sl(selectLast=true) {
   var o = "";
   for(var i=0; i<structureList.length; i++)
   {
     o+='<option value="'+i+'">'+structureList[i]+'</option>';
   }
   document.getElementById('structSelection').innerHTML = o;
+
+  if(selectLast)
+  {
+    $("#structSelection")[0].selectedIndex = structureList.length-1;
+    c = structureList[document.getElementById('structSelection').value];
+  }
+
+  if(structureList.length > 0)
+  {
+    $("#maintabs").show();
+    $("#delStructure").prop("disabled",false);
+  }
+  else
+  {
+      $("#maintabs").hide();
+      $("#delStructure").prop("disabled",true);
+  }
+
 
 }
 
@@ -228,7 +285,6 @@ about = $( "#about" ).dialog({
   width: 800,
   modal: true,
   show:'fade',
-  hide:'fade',
   buttons: {
     Cancel: function() {
       about.dialog( "close" );
@@ -252,6 +308,8 @@ about = $( "#about" ).dialog({
    event.preventDefault();
    sl_delete(document.getElementById('structSelection').value);
  } );
+ $("#delStructure").prop("disabled",true);
+
  $("#aboutButton").button();
  $("#aboutButton").click( function( event )  {
    event.preventDefault();
@@ -260,7 +318,18 @@ about = $( "#about" ).dialog({
 
 
  /* main content area */
- $("#maintabs").tabs();
+ $("#maintabs").tabs().hide();
+
+ /* structure tab */
+ $("#elements").on( "change", function( event ) {
+   current().setElements($(this)[0].value);
+   updateFields();
+   update_sl(false);
+ });
+
+
+ //test
+ addStructure();
 
   </script>
 </html>

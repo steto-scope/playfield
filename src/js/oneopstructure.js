@@ -3,6 +3,7 @@ OneOpStructure = function(s)
 {
   this.set = s;
   this.name = "?";
+  this.getName = function(){ return this.name;};
 
   this.opStr = "(a+b)%n";
   this.opSymbol="⊕";

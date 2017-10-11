@@ -15,14 +15,31 @@ fieldset {
 	background-color:#eee;
 }
 
+.ElCaption {
+	font-size: 1.5em;
+}
 
+.structureTab fieldset {
+
+}
+.structureTab legend {
+	background-color:#eee;
+	padding:1em;
+	padding-top:0.2em;
+	padding-bottom:0.2em;
+	width:80vw;
+	font-size: 1.5em;
+}
+.fscontent {
+	margin:1.5em;
+}
 
 
 
 /* left bar navigation */
 .navi {
 	width:15vw;
-	/*height:100vh;*/
+	height:100vh;
 	float:left;
 	border-right:#ddd solid 1px;
 }

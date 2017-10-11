@@ -17,24 +17,48 @@ Set = function()
       return html ? this.symbol+"<sub>"+this.n+"</sub>" : this.symbol+"_"+this.n;
     }
     return this.symbol;
-  }
+  };
+
+  this.toString = function(style)
+  {
+    switch(style)
+    {
+      case "elements":
+        return this.e.join(", ");
+      default:
+        return this.getName(true)+" = {"+this.e.join(", ")+"}";
+    }
+  };
 
   this.isEmpty = function() {return this.n==0;};
-  this.setElements = function(elements)
+  this.setElements = function(elements=0)
   {
-    if(!(elements instanceof Array))
+    if (typeof elements === 'string' || elements instanceof String)
+    {
+        r = new RegExp("(\\d+?)(\\s+|,|;|$)","ig");
+        arr = Array();
+        while((match = r.exec(elements)))
+        {
+          newint = parseInt(match[1]);
+          if(!arr.includes(newint))
+            arr.push(newint);
+        }
+        elements = arr;
+    }
+    else if(elements instanceof Array)
+    {
+      elements = elements.filter(function(elem, index, self) {
+          return index == self.indexOf(elem);
+      });
+    }
+    else //if(!(elements instanceof Array))
     {
       this.n = parseInt(elements);
       elements = Array();
       for(var i=0; i<this.n; i++)
         elements[i] = i;
     }
-    else
-    {
-      elements = elements.filter(function(elem, index, self) {
-          return index == self.indexOf(elem);
-      });
-    }
+
     this.e = elements;
     this.n = this.e.length;
   };
