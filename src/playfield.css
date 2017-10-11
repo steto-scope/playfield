@@ -1,0 +1,70 @@
+body {
+font-size:0.9em;
+margin:0px;
+}
+fieldset {
+ border:none;
+}
+
+.content {
+	width:85vw;
+	height:100vh;
+	margin-left: 15vw;
+	background-color:#eee;
+}
+.navi {
+	width:15vw;
+	height:100vh;
+	float:left;
+	border-right:#ddd solid 1px;
+}
+
+.logo {
+	margin-bottom: 50px;
+}
+
+.controls {
+	text-align: center;
+}
+.controls .buttons {
+
+}
+
+#structSelection {
+	outline:none;
+	width:15vw;
+	border:none;
+	overflow:hidden;
+}
+
+#structSelection option {
+	padding:20px;
+	padding-top:12px;
+	padding-bottom: 12px;
+	font-size: 18px;
+}
+
+.structureSelection {
+	margin-top:20px;
+}
+
+
+
+#about h1, #about h5{
+	text-align:center;
+}
+#about ul, #about li {
+ list-style-type: none;
+}
+#about th {
+	text-align: left;
+	vertical-align: top;
+}
+#about td{
+	padding-left:10px;
+}
+#aboutButton {
+	position:fixed;
+	top:95vh;
+	left:1vh;
+}
