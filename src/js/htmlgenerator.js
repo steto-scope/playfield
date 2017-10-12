@@ -36,3 +36,27 @@ function renderTable(s,hideZero=false,hideInverse=false)
 	o+='</tbody></table>';
 	return o;
 }
+
+function renderInvTable(s,hideZero=false) {
+
+	if(!s.hasOp1Ne())
+		return "";
+		
+	var o = '<table class="cayley add inv"><thead><tr><th>a</th>';
+	for(var i =0; i<s.set.n; i++)
+		if(!(hideZero && i==0))
+			o+='<th>'+s.set.e[i]+'</th>';
+	o+='</tr></thead><tbody><tr><th>-a</th>';
+
+	for(var i =0; i<s.set.n; i++)
+	{
+        x = s.inv[s.set.e[i]];
+				if(!(hideZero && j==0))
+					o+='<td class="'+(s.set.e.indexOf(x)<0?"noElement":"")+'">'+(typeof x !== "undefined" ? x : "")+'</td>';
+
+
+	}
+
+	o+='</tr></tbody></table>';
+	return o;
+}

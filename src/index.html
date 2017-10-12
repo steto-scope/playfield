@@ -164,7 +164,7 @@
           <table>
             <tr>
               <th>Version:</th>
-              <td>0.2</td>
+              <td>0.3</td>
             </tr>
             <tr>
               <th>Autor:</th>
@@ -178,12 +178,35 @@
               <th>Quellcode:</th>
               <td><a href="https://github.com/steto-scope/playfield" target="_blank">https://github.com/steto-scope/playfield</a></td>
             </tr>
+            <tr>
             <th>Verwendete Komponenten:</th>
-            <td>jQuery v1.12.4<br>jQuery UI v1.12.1<br>jsep 0.3.2</td>
+            <td>
+              <table>
+                <tr>
+                  <td><a href="https://jquery.org" target="_blank">jQuery</a></td>
+                  <td>v1.12.4</td>
+                </tr>
+                <tr>
+                  <td><a href="https://jqueryui.com" target="_blank">jQuery UI</a></td>
+                  <td>v1.12.1</td>
+                </tr>
+                <tr>
+                  <td><a href="https://github.com/soney/jsep" target="_blank">jsep</td>
+                  <td>v0.3.2</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
           </table>
         </div>
         <br>
         <ul>
+          <li>
+            <strong>v0.3</strong>
+            <ul>
+              <li></li>
+            </ul>
+          </li>
           <li>
             <strong>v0.2</strong>
             <ul>
@@ -263,7 +286,7 @@ function updateFields()
   $("#op1formula")[0].value = s.opStr;
   $("#op1symbol").val(s.opSymbol);
   $("#op1symbol").selectmenu("refresh");
-  $("#op1table").html(renderTable(s,false,false));
+  $("#op1table").html(renderInvTable(s,false)+"<br>"+renderTable(s,false,false));
   $("#op1button").val(s.opSymbol);
 
 
@@ -433,7 +456,6 @@ about = $( "#about" ).dialog({
  $("#calcExpression").on("keyup", function( event ) {
   var result = current().calculateExpression($("#calcExpression").val());
   $("#calcResult").html(result);
-  console.log(ast);
   //updateFields();
 });
 $("#op1button").on("click",function( event ) {
