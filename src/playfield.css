@@ -17,7 +17,6 @@ fieldset {
 
 .ElCaption {
 	font-size: 1.5em;
-
 }
 
 .structureTab fieldset {
@@ -32,8 +31,11 @@ fieldset {
 	padding:1em;
 	padding-top:0.2em;
 	padding-bottom:0.2em;
-	width:80vw;
+	width:90%;
 	font-size: 1.5em;
+}
+.structureTab td {
+  vertical-align: top;
 }
 .selectdropdown {
       height: 200px;
@@ -44,6 +46,35 @@ fieldset {
 .footnote {
 	font-size: 0.7em;
 }
+.error {
+  color:red;
+}
+
+
+.cayley
+{
+	margin:0 auto;
+	border-collapse:collapse;
+}
+
+.cayley td {
+	border-collapse:collapse;
+	border:1px solid #ccc;
+	padding:5px;
+	text-align: center;
+	vertical-align:center;
+}
+
+.cayley th {
+	background-color:#ccc;
+	padding:8px;
+	vertical-align: center;
+	text-align: center;
+	border:1px solid white;
+}
+.noElement {
+	background-color: #ffdddd;
+	}
 
 
 

@@ -11,6 +11,8 @@
     <title></title>
 	<script src="js/set.js"></script>
   <script src="js/oneopstructure.js"></script>
+  <script src="js/htmlgenerator.js"></script>
+  <script src="js/jsep/jsep.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="playfield.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -40,78 +42,95 @@
             <li><a href="#mainStructureTab">Einstellungen von <span class="structName"></span></a></li>
           </ul>
           <div class="structureTab" id="mainStructureTab">
-            <div class="setSettings">
-              <fieldset>
-                <legend>Menge von <span class="structName"></span></legend>
-                <div class="fscontent">
-                  <span class="ElCaption" id="elementsStr"></span>
-                  <br><br>
-                  <table>
-                    <tr>
-                      <th>Mächtigkeit:</th>
-                      <td>#<span class="structSetName"></span> = <span class="structSetCard"></span></td>
-                    </tr>
-                    <tr>
-                      <th>Elemente:</th>
-                      <td><input type="text" id="elements" size="25"></input></td>
-                    </tr>
-                    <tr>
-                      <th>Mengensymbol:</th>
-                      <td><input type="text" id="setSymbol" size="2" maxlength="1"></input></td>
-                    </tr>
-                  </table>
-                </div>
-              </fieldset>
-              <fieldset>
-                <legend>Operation <span class="op1name"></span> auf <span class="structSetName"></span></legend>
-                <div class="fscontent">
-                  <br><br>
-                  <table>
-                    <tr>
-                      <th>Operatorsymbol:</th>
-                      <td>
-                        <select id="op1symbol">
-                          <optgroup label="additiv">
-                            <option>+</option>
-                            <option>⊕</option>
-                            <option>⊞</option>
-                            <option>⨹</option>
-                            <option>-</option>
-                            <option>⊖</option>
-                            <option>⊟</option>
-                            <option>⨺</option>
-                          </optgroup>
-                          <optgroup label="multiplikativ">
-                            <option>*</option>
-                            <option>⋆</option>
-                            <option>×</option>
-                            <option>⊛</option>
-                            <option>⊗</option>
-                            <option>⊠</option>
-                            <option>⨻</option>
-                            <option>÷</option>
-                          </optgroup>
-                          <optgroup label="Sonne, Mond und Kringel">
-                            <option>∘</option>
-                            <option>∙</option>
-                            <option>⋅</option>
-                            <option>⊙</option>
-                            <option>⊚</option>
-                            <option>⊡</option>
-                            <option>⋄</option>
-                          </optgroup>
-                        </select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>JavaScript-Formel:</th>
-                      <td><input type="text" id="op1formula" size="25"></input><br>
-                      <span class="footnote">a: Linker Operand<br>b: Rechter Operand<br>n: Mächtigkeit der Menge<br>%: Modulo-Operator</span></td>
-                    </tr>
-                  </table>
-                </div>
-              </fieldset>
-            </div>
+            <table>
+              <tr>
+                <td>
+                  <fieldset>
+                    <legend>Menge von <span class="structName"></span></legend>
+                    <div class="fscontent">
+                      <span class="ElCaption" id="elementsStr"></span>
+                      <br><br>
+                      <table>
+                        <tr>
+                          <th>Mächtigkeit:</th>
+                          <td>#<span class="structSetName"></span> = <span class="structSetCard"></span></td>
+                        </tr>
+                        <tr>
+                          <th>Elemente:</th>
+                          <td><input type="text" id="elements" size="25"></input></td>
+                        </tr>
+                        <tr>
+                          <th>Mengensymbol:</th>
+                          <td><input type="text" id="setSymbol" size="2" maxlength="1"></input></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </fieldset>
+                </td>
+                <td>
+                  <fieldset>
+                    <legend>Operation <span class="op1name"></span> auf <span class="structSetName"></span></legend>
+                    <div class="fscontent">
+                      <table>
+                        <tr>
+                          <th>Operatorsymbol:</th>
+                          <td style="vertical-align:top;">
+                            <select id="op1symbol">
+                              <optgroup label="additiv">
+                                <option>⊕</option>
+                                <option>⊞</option>
+                                <option>⨹</option>
+                                <option>-</option>
+                                <option>⊖</option>
+                                <option>⊟</option>
+                                <option>⨺</option>
+                              </optgroup>
+                              <optgroup label="multiplikativ">
+                                <option>⋆</option>
+                                <option>×</option>
+                                <option>⊛</option>
+                                <option>⊗</option>
+                                <option>⊠</option>
+                                <option>⨻</option>
+                                <option>÷</option>
+                              </optgroup>
+                              <optgroup label="Sonne, Mond und Kringel">
+                                <option>∘</option>
+                                <option>∙</option>
+                                <option>⋅</option>
+                                <option>⊙</option>
+                                <option>⊚</option>
+                                <option>⊡</option>
+                                <option>⋄</option>
+                              </optgroup>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>JavaScript-Formel:</th>
+                          <td style="vertical-align:top;"><input type="text" id="op1formula" size="25"></input><br>
+                          <span class="footnote">a: Linker Operand<br>b: Rechter Operand<br>n: Mächtigkeit der Menge<br>%: Modulo-Operator</span></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </fieldset>
+                </td>
+                </tr>
+                <tr>
+                  <td>
+                    <fieldset>
+                      <legend>Rechnen in <span class="structName"></span></legend>
+                      <div class="fscontent">
+                        <input type="text" id="calcExpression"></input> <input type="button" id="op1button"></input><br><br>
+                        Ergebnis: <span id="calcResult"></span>
+                      </div>
+                    </fieldset>
+                  </td>
+                  <td>
+                    <div class="opTable" id="op1table"></div>
+                  </td>
+                </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -160,7 +179,7 @@
               <td><a href="https://github.com/steto-scope/playfield" target="_blank">https://github.com/steto-scope/playfield</a></td>
             </tr>
             <th>Verwendete Komponenten:</th>
-            <td>jQuery v1.12.4<br>jQuery UI v1.12.1</td>
+            <td>jQuery v1.12.4<br>jQuery UI v1.12.1<br>jsep 0.3.2</td>
           </table>
         </div>
         <br>
@@ -168,6 +187,8 @@
           <li>
             <strong>v0.2</strong>
             <ul>
+              <li>Rechnen auf der Struktur</li>
+              <li>Editieren der Struktur-Operation</li>
               <li>Editieren der Struktur-Menge</li>
             </ul>
           </li>
@@ -242,6 +263,10 @@ function updateFields()
   $("#op1formula")[0].value = s.opStr;
   $("#op1symbol").val(s.opSymbol);
   $("#op1symbol").selectmenu("refresh");
+  $("#op1table").html(renderTable(s,false,false));
+  $("#op1button").val(s.opSymbol);
+
+
 }
 
 function sl_addNew(n,name,add,mul)
@@ -395,12 +420,31 @@ about = $( "#about" ).dialog({
    updateFields();
    update_sl(false);
  });
+ $("#op1formula").on("change", function( event ) {
+  current().setOpStr($(this)[0].value);
+  updateFields();
+});
  $("#op1symbol").selectmenu().selectmenu( "menuWidget" ).addClass("selectdropdown");
   $("#op1symbol").on("selectmenuchange", function( event ) {
    current().setOpSymbol($(this)[0].value);
    updateFields();
    update_sl(false);
  });
+ $("#calcExpression").on("keyup", function( event ) {
+  var result = current().calculateExpression($("#calcExpression").val());
+  $("#calcResult").html(result);
+  console.log(ast);
+  //updateFields();
+});
+$("#op1button").on("click",function( event ) {
+  var cursorPos = $('#calcExpression').prop('selectionStart');
+     var v = $('#calcExpression').val();
+     var textBefore = v.substring(0,  cursorPos);
+     var textAfter  = v.substring(cursorPos, v.length);
+     $('#calcExpression').val(textBefore + $(this).val() + textAfter);
+     $('#calcExpression').focus();
+ //updateFields();
+})
 
 
  //test
