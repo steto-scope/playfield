@@ -11,7 +11,7 @@
     <title>Galois' Playfield</title>
 	<script src="js/set.js"></script>
   <script src="js/operation.js"></script>
-  <script src="js/group.js"></script>
+  <script src="js/field.js"></script>
   <script src="js/htmlgenerator.js"></script>
   <script src="js/jsep/jsep.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -93,7 +93,6 @@
                                 <option>⊗</option>
                                 <option>⊠</option>
                                 <option>⨻</option>
-                                <option>÷</option>
                               </optgroup>
                               <optgroup label="Sonne, Mond und Kringel">
                                 <option>∘</option>
@@ -121,19 +120,74 @@
                     </div>
                   </fieldset>
                 </td>
+                <td>
+                  <fieldset class="twoOp">
+                    <legend>Operation <span class="op2name"></span> auf <span class="structSetName"></span></legend>
+                    <div class="fscontent">
+                      <table>
+                        <tr>
+                          <th>Operatorsymbol:</th>
+                          <td style="vertical-align:top;">
+                            <select id="op2symbol">
+                              <optgroup label="additiv">
+                                <option>⊕</option>
+                                <option>⊞</option>
+                                <option>⨹</option>
+                                <option>-</option>
+                                <option>⊖</option>
+                                <option>⊟</option>
+                                <option>⨺</option>
+                              </optgroup>
+                              <optgroup label="multiplikativ">
+                                <option>⋆</option>
+                                <option>×</option>
+                                <option>⊛</option>
+                                <option>⊗</option>
+                                <option>⊠</option>
+                                <option>⨻</option>
+                              </optgroup>
+                              <optgroup label="Sonne, Mond und Kringel">
+                                <option>∘</option>
+                                <option>∙</option>
+                                <option>⋅</option>
+                                <option>⊙</option>
+                                <option>⊚</option>
+                                <option>⊡</option>
+                                <option>⋄</option>
+                              </optgroup>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Inverse-Notation:</th>
+                          <td style="vertical-align:top;"><span id="invOp2"></span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Generator-Formel:</th>
+                          <td style="vertical-align:top;"><input type="text" id="op2formula" size="25"></input><br><input type="button" id="regenerateTable" value="Verknüpfungstabelle neu generieren"></input><br>
+                          <span class="footnote">a: Linker Operand<br>b: Rechter Operand<br>n: Mächtigkeit der Menge<br>%: Modulo-Operator</span></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </fieldset>
+                </td>
                 </tr>
                 <tr>
                   <td>
                     <fieldset>
                       <legend>Rechnen in <span class="structName"></span></legend>
                       <div class="fscontent">
-                        <input type="text" id="calcExpression"></input> <input type="button" id="op1button"></input><br><br>
+                        <input type="text" id="calcExpression"></input> <input type="button" id="op1button"></input><input type="button" class="twoOp" id="op2button"></input><br><br>
                         Ergebnis: <span id="calcResult"></span>
                       </div>
                     </fieldset>
                   </td>
                   <td>
                     <div class="opTable" id="op1table"></div>
+                  </td>
+                  <td>
+                    <div class="opTable twoOp" id="op2table"></div>
                   </td>
                 </tr>
             </table>
@@ -210,7 +264,7 @@
           <li>
             <strong>v0.4</strong>
             <ul>
-              <li></li>
+              <li>Strukturen mit zwei Operationen</li>
             </ul>
           </li>
           <li>
@@ -289,19 +343,33 @@ function updateFields()
 {
   var s = current();
 
+  $(".twoOp").css("visibility",s.hasTwoOperations()?"visible":"collapse");
   $("#elementsStr")[0].innerHTML = s.set;
   $("#elements")[0].value = s.set.toString("elements");
   $(".structName").html(s.getName());
   $(".structSetName").html(s.set.getSymbol());
   $(".structSetCard").html(s.set.n);
   $("#setSymbol")[0].value = s.set.symbol;
+
   $(".op1name").html(s.ops[0].symbol);
   $("#op1formula")[0].value = s.ops[0].tableGeneratorCode;
   $("#op1symbol").val(s.ops[0].symbol);
   $("#invOp1").html(s.ops[0].inverseSymbolIsPrefix ? s.ops[0].inverseSymbol+"a" : "a"+s.ops[0].inverseSymbol);
   $("#op1symbol").selectmenu("refresh");
-  $("#op1table").html(renderTable(s.ops[0],false,false)+'<br><span class="footnote">Ziehe die Tabellenüberschrift in die Zellen um die Verknüpfungstabelle manuell zu verändern</span><br><br>'+renderInvTable(s.ops[0],false));
+  $("#op1table").html(renderTable(s.ops[0],false,false)+'<br><br>'+renderInvTable(s.ops[0],false));
   $("#op1button").val(s.ops[0].symbol);
+
+  if(s.hasTwoOperations())
+  {
+    $(".op2name").html(s.ops[1].symbol);
+    $("#op2formula")[0].value = s.ops[1].tableGeneratorCode;
+    $("#op2symbol").val(s.ops[1].symbol);
+    $("#invOp2").html(s.ops[1].inverseSymbolIsPrefix ? s.ops[1].inverseSymbol+"a" : "a"+s.ops[1].inverseSymbol);
+    $("#op2symbol").selectmenu("refresh");
+    $("#op2table").html(renderTable(s.ops[1],false,false)+'<br><br>'+renderInvTable(s.ops[1],false));
+    $("#op2button").val(s.ops[1].symbol);
+    $("#op2invbutton").val(s.ops[1].inverseSymbol);
+  }
   $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
 
 
@@ -329,12 +397,18 @@ function updateFields()
 function sl_addNew(n,name,add,mul)
 {
   var m = new Set();
-  if((add ^ mul))
+  //if((add ^ mul))
   {
-    var op = new Operation(m);
-    op.tableGeneratorCode = add ? "(a+b)%n" : "(a*b)%n";
-    op.symbol = add ? "⊕" : "⊛";
-    var g = new Group(m,op);
+    var g = new Field(m);
+    if(add)
+    {
+      g.ops.push(new Operation(m));
+    }
+    if(mul)
+    {
+      g.ops.push(new Operation(m,"⊛","(a*b)%n","~"));
+    }
+
     g.name = name;
     g.setElements(n);
     structureList.push(g);
@@ -478,9 +552,16 @@ about = $( "#about" ).dialog({
    updateFields();
    update_sl(false);
  });
+
  $("#op1symbol").selectmenu().selectmenu( "menuWidget" ).addClass("selectdropdown");
   $("#op1symbol").on("selectmenuchange", function( event ) {
    current().ops[0].symbol = ($(this)[0].value);
+   updateFields();
+   update_sl(false);
+ });
+ $("#op2symbol").selectmenu().selectmenu( "menuWidget" ).addClass("selectdropdown");
+  $("#op2symbol").on("selectmenuchange", function( event ) {
+   current().ops[1].symbol = ($(this)[0].value);
    updateFields();
    update_sl(false);
  });
@@ -495,17 +576,29 @@ $("#op1button").on("click",function( event ) {
      var textAfter  = v.substring(cursorPos, v.length);
      $('#calcExpression').val(textBefore + $(this).val() + textAfter);
      $('#calcExpression').focus();
-})
+     $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
+});
+$("#op2button").on("click",function( event ) {
+  var cursorPos = $('#calcExpression').prop('selectionStart');
+     var v = $('#calcExpression').val();
+     var textBefore = v.substring(0,  cursorPos);
+     var textAfter  = v.substring(cursorPos, v.length);
+     $('#calcExpression').val(textBefore + $(this).val() + textAfter);
+     $('#calcExpression').focus();
+     $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
+});
+
 $("#regenerateTable").on("click",function( event ) {
   current().ops[0].tableGeneratorCode = ($("#op1formula")[0].value);
   current().ops[0].regenerateTable();
  updateFields();
-})
+});
 
 
 
  //test
- addStructure();
+sl_addNew(4,"A",true,false);
+sl_addNew(5,"B",true,true);
 
   </script>
 </html>

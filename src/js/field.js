@@ -1,11 +1,12 @@
 
-Group = function(s,op)
+Field = function(s)
 {
   this.set = s;
   this.name = "?";
   this.getName = function(){ return this.name;};
 
-  this.ops = [op];
+  this.ops = [];//op2===false ? [op] : [op,op2];
+  this.hasTwoOperations = function() {return this.ops.length>1; };
 
   this.OpBySymbol = function(symbol,inv=false) {
     for(var i=0; i<this.ops.length; i++)
@@ -20,12 +21,24 @@ Group = function(s,op)
 
    this.setElements = function(elements) {
      this.set.setElements(elements);
-     this.ops[0].regenerateTable();
+     for(var i=0; i<this.ops.length; i++)
+      this.ops[i].regenerateTable();
    };
 
 
-   this.calculateExpression = function(str) {
-     jsep.addBinaryOp(this.ops[0].symbol,9);
+   this.calculateExpression = function(str)
+   {
+     if(str.trim().length < 1)
+      return "";
+      
+     jsep.binary_ops = [];
+     jsep.unary_ops=[];
+     for(var i=0; i<this.ops.length; i++)
+     {
+       jsep.addBinaryOp(this.ops[i].symbol,9+i);
+       jsep.addUnaryOp(this.ops[i].inverseSymbol);
+    }
+
      try
      {
        var ast = jsep(str);
@@ -50,12 +63,11 @@ Group = function(s,op)
      {
        var op = this.OpBySymbol(node.operator,true);
 
-         var inv = op.inv[parseInt(node.argument.value)];
-         if(typeof node.argument.value === "undefined")
-          throw "Ungültiger Ausdruck";
-          else if(!this.set.e.includes(node.argument.value))
-           throw node.argument.value+" ∉ "+this.set.getSymbol(true);
-         else if(typeof inv === "undefined")
+        var exp = this.evaluateNode(node.argument);
+
+         var inv = op.inv[exp];
+
+         if(typeof inv === "undefined")
           throw "Inverses Element zu "+node.argument.value+" existiert nicht";
         else
           return inv;

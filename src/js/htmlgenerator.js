@@ -4,7 +4,7 @@ function renderTable(op,hideZero=false,hideInverse=false)
 	var o = '<table class="cayley '+op.symbol+'"><thead><tr><th>'+op.symbol+'</th>';
 	for(var i =0; i<op.set.n; i++)
 		if(!(hideZero && i==0))
-			o+='<th class="draggable">'+op.set.e[i]+'</th>';
+			o+='<th class="draggable" title="Ziehe die Tabellenüberschrift in die Zellen um die Verknüpfungstabelle manuell zu verändern">'+op.set.e[i]+'</th>';
 	o+='</tr></thead><tbody>';
 
 /*
@@ -22,7 +22,7 @@ function renderTable(op,hideZero=false,hideInverse=false)
 	{
 		if(!(hideZero && i==0))
 		{
-			o+='<tr><th class="draggable">'+op.set.e[i]+'</th>';
+			o+='<tr><th class="draggable" title="Ziehe die Tabellenüberschrift in die Zellen um die Verknüpfungstabelle manuell zu verändern">'+op.set.e[i]+'</th>';
 			for(var j=0; j<op.set.n; j++)
 			{
         x = op.map(i,j,true);
@@ -48,7 +48,7 @@ function renderInvTable(op,hideZero=false) {
 	for(var i =0; i<op.set.n; i++)
 		if(!(hideZero && i==0))
 			o+='<th>'+op.set.e[i]+'</th>';
-	o+='</tr></thead><tbody><tr><th>-a</th>';
+	o+='</tr></thead><tbody><tr><th>'+op.inverseSymbol+'a</th>';
 
 	for(var i =0; i<op.set.n; i++)
 	{

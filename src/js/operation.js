@@ -1,11 +1,11 @@
-Operation = function(set=[])
+Operation = function(set=[],symbol="⊕",genCode="(a+b)%n",invSymbol="-",invPrefix=true)
 {
 
   this.set = set;
-  this.symbol = "⊕";
-  this.inverseSymbol = "-";
-  this.inverseSymbolIsPrefix = true;
-  this.tableGeneratorCode = "(a+b)%n";
+  this.symbol = symbol;
+  this.inverseSymbol = invSymbol;
+  this.inverseSymbolIsPrefix = invPrefix;
+  this.tableGeneratorCode = genCode;
   this.t = [];
 
   this.generateElement = function(a,b,n=this.set.n)
