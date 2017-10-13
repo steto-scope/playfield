@@ -73,6 +73,8 @@ Operation = function(set=[],symbol="⊕",genCode="(a+b)%n",invSymbol="-",invPref
   this.innerError = false;
   this.isAssoc = false;
   this.assocError = false;
+  this.isCommutative = false;
+  this.commutativeError = false;
   this.neutralElement = false;
   this.hasNeutralElement = false;
   this.isMagma = false;
@@ -98,6 +100,14 @@ Operation = function(set=[],symbol="⊕",genCode="(a+b)%n",invSymbol="-",invPref
      return true;
    };
 
+   this.testCom = function() {
+ 		for(var i=0; i<this.set.n; i++)
+ 			for(var j=0; j<this.set.n; j++)
+ 					if(this.map(i,j,true) != this.map(j,i,true))
+ 						return [this.set.e[i],this.set.e[j]];
+ 		return true;
+ 	};
+
       this.determineNeutralElement = function()
         {
           for(var i=0; i<this.set.n; i++)
@@ -118,6 +128,9 @@ Operation = function(set=[],symbol="⊕",genCode="(a+b)%n",invSymbol="-",invPref
 
 
    this.analyzeStructure = function() {
+
+     this.commutativeError = this.testCom();
+     this.isCommutative = this.commutativeError === true;
 
      this.innerError = this.testInner();
      this.isInner = this.innerError === true;
