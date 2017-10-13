@@ -14,7 +14,6 @@ Field = function(s,op)
     return undefined;
   }
 
-
    this.toString = function(){
      return this.name + " = ("+this.set.getSymbol()+","+this.ops.join(",")+")";
    };

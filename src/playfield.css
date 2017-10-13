@@ -72,6 +72,9 @@ fieldset {
 	text-align: center;
 	border:1px solid white;
 }
+.cayley .draggable {
+  cursor: pointer;
+}
 .noElement {
 	background-color: #ffdddd;
 	}

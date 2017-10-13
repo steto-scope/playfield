@@ -1,10 +1,10 @@
 
 function renderTable(op,hideZero=false,hideInverse=false)
 {
-	var o = '<table class="cayley add"><thead><tr><th>'+op.symbol+'</th>';
+	var o = '<table class="cayley '+op.symbol+'"><thead><tr><th>'+op.symbol+'</th>';
 	for(var i =0; i<op.set.n; i++)
 		if(!(hideZero && i==0))
-			o+='<th>'+op.set.e[i]+'</th>';
+			o+='<th class="draggable">'+op.set.e[i]+'</th>';
 	o+='</tr></thead><tbody>';
 
 /*
@@ -22,12 +22,12 @@ function renderTable(op,hideZero=false,hideInverse=false)
 	{
 		if(!(hideZero && i==0))
 		{
-			o+='<tr><th>'+op.set.e[i]+'</th>';
+			o+='<tr><th class="draggable">'+op.set.e[i]+'</th>';
 			for(var j=0; j<op.set.n; j++)
 			{
         x = op.map(i,j,true);
 				if(!(hideZero && j==0))
-					o+='<td class="'+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+x+'</td>';
+					o+='<td class="dropable '+op.symbol+' row_'+i+' col_'+j+' '+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+x+'</td>';
 			}
 			o+='</tr>';
 		}

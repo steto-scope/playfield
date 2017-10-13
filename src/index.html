@@ -205,7 +205,7 @@
           <li>
             <strong>v0.3</strong>
             <ul>
-              <li></li>
+              <li>Elementweises Ändern der Verknüpfung durch Drag&amp;Drop in der Verknüpfungstabelle</li>
             </ul>
           </li>
           <li>
@@ -233,7 +233,7 @@
 var structureList = [];
 var c;
 function current() {
-  return c;//structureList[document.getElementById('structSelection').value];
+  return c;
 }
 
 function nameSuggestion()
@@ -287,9 +287,28 @@ function updateFields()
   $("#op1formula")[0].value = s.ops[0].tableGeneratorCode;
   $("#op1symbol").val(s.ops[0].symbol);
   $("#op1symbol").selectmenu("refresh");
-  $("#op1table").html(renderInvTable(s.ops[0],false)+"<br>"+renderTable(s.ops[0],false,false));
+  $("#op1table").html(renderTable(s.ops[0],false,false)+'<br><span class="footnote">Ziehe die Tabellenüberschrift in die Zellen um die Verknüpfungstabelle manuell zu verändern</span><br><br>'+renderInvTable(s.ops[0],false));
   $("#op1button").val(s.ops[0].symbol);
   $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
+
+  $(".cayley .draggable").on("dragstart", function(event){
+    event.originalEvent.dataTransfer.setData("text/text", event.target.innerText);
+  });
+  $(".cayley .draggable").attr("draggable",true);
+  $(".cayley .dropable").on("dragover", function(event){
+    event.preventDefault();
+  });
+  $(".cayley .dropable").on("drop", function(event){
+    event.preventDefault();
+    var data=event.originalEvent.dataTransfer.getData("text/text");
+    event.target.innerText = data;
+
+    var classes = event.target.className.split(' ');
+    var op = current().OpBySymbol(classes[1]);  
+    op.t[op.set.e[classes[2].substring(4)]][op.set.e[classes[3].substring(4)]] = parseInt(data);
+    op.analyzeStructure();
+    updateFields();
+  });
 
 }
 
@@ -468,6 +487,7 @@ $("#regenerateTable").on("click",function( event ) {
   current().ops[0].regenerateTable();
  updateFields();
 })
+
 
 
  //test
