@@ -8,9 +8,10 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
-    <title></title>
+    <title>Galois' Playfield</title>
 	<script src="js/set.js"></script>
-  <script src="js/oneopstructure.js"></script>
+  <script src="js/operation.js"></script>
+  <script src="js/field.js"></script>
   <script src="js/htmlgenerator.js"></script>
   <script src="js/jsep/jsep.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -108,7 +109,7 @@
                         </tr>
                         <tr>
                           <th>JavaScript-Formel:</th>
-                          <td style="vertical-align:top;"><input type="text" id="op1formula" size="25"></input><br>
+                          <td style="vertical-align:top;"><input type="text" id="op1formula" size="25"></input><br><input type="button" id="regenerateTable" value="Verknüpfungstabelle neu generieren"></input><br>
                           <span class="footnote">a: Linker Operand<br>b: Rechter Operand<br>n: Mächtigkeit der Menge<br>%: Modulo-Operator</span></td>
                         </tr>
                       </table>
@@ -282,12 +283,12 @@ function updateFields()
   $(".structSetName").html(s.set.getSymbol());
   $(".structSetCard").html(s.set.n);
   $("#setSymbol")[0].value = s.set.symbol;
-  $(".op1name").html(s.opSymbol);
-  $("#op1formula")[0].value = s.opStr;
-  $("#op1symbol").val(s.opSymbol);
+  $(".op1name").html(s.ops[0].symbol);
+  $("#op1formula")[0].value = s.ops[0].tableGeneratorCode;
+  $("#op1symbol").val(s.ops[0].symbol);
   $("#op1symbol").selectmenu("refresh");
-  $("#op1table").html(renderInvTable(s,false)+"<br>"+renderTable(s,false,false));
-  $("#op1button").val(s.opSymbol);
+  $("#op1table").html(renderInvTable(s.ops[0],false)+"<br>"+renderTable(s.ops[0],false,false));
+  $("#op1button").val(s.ops[0].symbol);
 
 
 }
@@ -297,9 +298,10 @@ function sl_addNew(n,name,add,mul)
   var m = new Set();
   if((add ^ mul))
   {
-    var g = new OneOpStructure(m);
-    g.opStr = add ? "(a+b)%n" : "(a*b)%n";
-    g.opSymbol = add ? "⊕" : "⊛";
+    var op = new Operation(m);
+    op.tableGeneratorCode = add ? "(a+b)%n" : "(a*b)%n";
+    op.symbol = add ? "⊕" : "⊛";
+    var g = new Field(m,op);
     g.name = name;
     g.setElements(n);
     structureList.push(g);
@@ -443,13 +445,9 @@ about = $( "#about" ).dialog({
    updateFields();
    update_sl(false);
  });
- $("#op1formula").on("change", function( event ) {
-  current().setOpStr($(this)[0].value);
-  updateFields();
-});
  $("#op1symbol").selectmenu().selectmenu( "menuWidget" ).addClass("selectdropdown");
   $("#op1symbol").on("selectmenuchange", function( event ) {
-   current().setOpSymbol($(this)[0].value);
+   current().ops[0].symbol = ($(this)[0].value);
    updateFields();
    update_sl(false);
  });
@@ -465,7 +463,11 @@ $("#op1button").on("click",function( event ) {
      var textAfter  = v.substring(cursorPos, v.length);
      $('#calcExpression').val(textBefore + $(this).val() + textAfter);
      $('#calcExpression').focus();
- //updateFields();
+})
+$("#regenerateTable").on("click",function( event ) {
+  current().ops[0].tableGeneratorCode = ($("#op1formula")[0].value);
+  current().ops[0].regenerateTable();
+ updateFields();
 })
 
 
