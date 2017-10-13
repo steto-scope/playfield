@@ -60,6 +60,8 @@ Operation = function(set=[])
         }
 
         var i = li.filter((n)=>ri.includes(n))[0];
+        if(li.length>1|| ri.length>1)
+          i = undefined;
         return i;
       };
 
@@ -179,9 +181,31 @@ Operation = function(set=[])
      }
 
      o.leftInverse = o.rightInverse = o.inverse = false;
-     if(this.inv.includes(element))
+     if(typeof this.inv[element] !== "undefined")
      {
-       o.leftInverse = o.rightInverse = o.inverse = [this.set.e[this.inv.indexOf(element)]];
+       o.leftInverse = o.rightInverse = o.inverse = [this.inv[element]];
+     }
+     else
+     {
+       o.leftInverse = [];
+       o.rightInverse = [];
+
+       //todo: check if right and left are correct
+       for(var i=0; i<this.set.n; i++)
+       {
+         if(this.t[element][this.set.e[i]] == this.neutralElement)
+         {
+           o.leftInverse.push(this.set.e[i]);
+         }
+       }
+
+       for(var i=0; i<this.set.n; i++)
+       {
+         if(this.t[this.set.e[i]][element] == this.neutralElement)
+         {
+           o.rightInverse.push(this.set.e[i]);
+         }
+       }
      }
 
      return o;
