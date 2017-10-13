@@ -289,7 +289,7 @@ function updateFields()
   $("#op1symbol").selectmenu("refresh");
   $("#op1table").html(renderInvTable(s.ops[0],false)+"<br>"+renderTable(s.ops[0],false,false));
   $("#op1button").val(s.ops[0].symbol);
-
+  $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
 
 }
 
@@ -452,8 +452,7 @@ about = $( "#about" ).dialog({
    update_sl(false);
  });
  $("#calcExpression").on("keyup", function( event ) {
-  var result = current().calculateExpression($("#calcExpression").val());
-  $("#calcResult").html(result);
+  $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
   //updateFields();
 });
 $("#op1button").on("click",function( event ) {
