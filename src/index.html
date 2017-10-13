@@ -11,7 +11,7 @@
     <title>Galois' Playfield</title>
 	<script src="js/set.js"></script>
   <script src="js/operation.js"></script>
-  <script src="js/field.js"></script>
+  <script src="js/group.js"></script>
   <script src="js/htmlgenerator.js"></script>
   <script src="js/jsep/jsep.min.js"></script>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -334,7 +334,7 @@ function sl_addNew(n,name,add,mul)
     var op = new Operation(m);
     op.tableGeneratorCode = add ? "(a+b)%n" : "(a*b)%n";
     op.symbol = add ? "⊕" : "⊛";
-    var g = new Field(m,op);
+    var g = new Group(m,op);
     g.name = name;
     g.setElements(n);
     structureList.push(g);

@@ -1,5 +1,5 @@
 
-Field = function(s,op)
+Group = function(s,op)
 {
   this.set = s;
   this.name = "?";
