@@ -79,6 +79,59 @@ fieldset {
 	background-color: #ffdddd;
 	}
 
+.tooltip .ok {
+  color:green;
+}
+.tooltip .notok {
+  color:red;
+}
+.tooltip {
+  position:absolute;
+  /*margin-top:-60px;
+  margin-left:-50px;*/
+  visibility: hidden;
+  border:1px solid slategrey;
+  padding:0px;
+  margin-top:-60px;
+  background-color:white;
+  opacity: 0;
+  transition: opacity 1s;
+  font-size: 0.8em;
+  pointer-events:none;
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px grey;
+}
+ .tooltip::after {
+   content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #555 transparent transparent;
+  pointer-events:none;
+}
+.tooltip th {
+  background-color: white;
+  padding:0px;
+  text-align: right;
+}
+.tooltip td {
+  border:none;
+  padding:2px;
+  text-align: center;
+  vertical-align: middle;
+}
+.tooltip em {
+  font-size: 1.2em;
+}
+.cayley td:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+
+}
+
 
 
 /* left bar navigation */

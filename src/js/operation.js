@@ -140,9 +140,52 @@ Operation = function(set=[])
      }
 
      this.isGroup = this.isMonoid && this.inv.includes(undefined);
+
+     for(var i=0; i<this.set.n; i++)
+      this.elementInfo[this.set.e[i]] = this.determineElementInfo(this.set.e[i]);
    };
 
 
+   this.elementInfo = {};
+   this.determineElementInfo = function(element)  {
+     var o = {};
+     o.element = element;
+
+     if(this.neutralElement === element)
+     {
+       o.isLeftNeutral = o.isRightNeutral = o.isNeutral = true;
+     }
+     else
+     {
+       o.isNeutral = false;
+       o.isLeftNeutral = true;
+       for(var i=0; i<this.set.n; i++)
+       {
+         if(this.map(element,this.set.e[i]) != this.set.e[i])
+          {
+            o.isLeftNeutral = false;
+            break;
+          }
+       }
+       o.isRightNeutral = true;
+       for(var i=0; i<this.set.n; i++)
+       {
+         if(this.map(this.set.e[i],element) != this.set.e[i])
+          {
+            o.isRightNeutral = false;
+            break;
+          }
+       }
+     }
+
+     o.leftInverse = o.rightInverse = o.inverse = false;
+     if(this.inv.includes(element))
+     {
+       o.leftInverse = o.rightInverse = o.inverse = [this.set.e[this.inv.indexOf(element)]];
+     }
+
+     return o;
+   };
 
 
 

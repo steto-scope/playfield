@@ -27,7 +27,9 @@ function renderTable(op,hideZero=false,hideInverse=false)
 			{
         x = op.map(i,j,true);
 				if(!(hideZero && j==0))
-					o+='<td class="dropable '+op.symbol+' row_'+i+' col_'+j+' '+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+x+'</td>';
+					o+='<td class="dropable '+op.symbol+' row_'+i+' col_'+j+' '+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+x+renderElementTooltip(op,x)+'</td>';
+					/*if(i==0 && j==op.set.n-1)
+					o+='<td style="border:none;" rowspan="100"><span class="tooltip"><table><tr><th>Element:</th><td><span class="toolt"</td></tr></td>';*/
 			}
 			o+='</tr>';
 		}
@@ -58,5 +60,25 @@ function renderInvTable(op,hideZero=false) {
 	}
 
 	o+='</tr></tbody></table>';
+	return o;
+}
+
+function renderElementTooltip(op,element)
+{
+	var info = op.elementInfo[element];
+	o = '<span class="tooltip"><table>';
+
+	o+='<tr><th><em>Element:</em></th><td><em>'+element+'</em></td></tr>';
+	o+="<tr><th></th><td></td></tr>";
+	o+='<tr><th>Linksneutral:</th><td>'+(info.isLeftNeutral?'<span class="ok">ja</span>':'<span class="notok">nein</span>')+'</td></tr>';
+	o+='<tr><th>Rechtsneutral:</th><td>'+(info.isRightNeutral?'<span class="ok">ja</span>':'<span class="notok">nein</span>')+'</td></tr>';
+	o+='<tr><th><em>Neutral:</em></th><td><em>'+(info.isNeutral?'<span class="ok">ja</span>':'<span class="notok">nein</span>')+'</em></td></tr>';
+	if(op.hasNeutralElement)
+	{
+		o+='<tr><th>Linksinverse:</th><td>'+(info.leftInverse !== false?'<span class="ok">'+info.leftInverse.join(", ")+'</span>':'<span class="notok">keine</span>')+'</td></tr>';
+		o+='<tr><th>Rechtsinverse:</th><td>'+(info.rightInverse !== false?'<span class="ok">'+info.rightInverse.join(", ")+'</span>':'<span class="notok">keine</span>')+'</td></tr>';
+		o+='<tr><th><em>Inverses Element:</em></th><td><em>'+(info.inverse !== false?'<span class="ok">'+info.inverse.join(", ")+'</span>':'<span class="notok">keines</span>')+'</em></td></tr>';
+	}
+	o+='</table></span>';
 	return o;
 }
