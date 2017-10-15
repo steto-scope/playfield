@@ -1,4 +1,4 @@
-Operation = function(set=[],symbol="⊕",genCode="(a+b)%n",invSymbol="-",invPrefix=true)
+Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix=true)
 {
 
   this.set = set;
@@ -153,8 +153,9 @@ Operation = function(set=[],symbol="⊕",genCode="(a+b)%n",invSymbol="-",invPref
      {
        this.inv[this.set.e[i]] = this.inverseOf(this.set.e[i]);
      }
+     this.hasInverse = !this.inv.includes(undefined) && this.hasNeutralElement;
 
-     this.isGroup = this.isMonoid && this.inv.includes(undefined);
+     this.isGroup = this.isMonoid && this.hasInverse;
 
      for(var i=0; i<this.set.n; i++)
       this.elementInfo[this.set.e[i]] = this.determineElementInfo(this.set.e[i]);

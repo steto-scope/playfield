@@ -55,6 +55,24 @@ fieldset {
 }
 
 
+.classTrue {
+  background-color:lightgreen;
+  text-align: center;
+  border:1px solid black;
+}
+.classFalse {
+  background-color: salmon;
+  text-align: center;
+  border:1px solid black;
+}
+.minorClass {
+  font-size: 0.8em;
+}
+.majorClass {
+  font-weight: bold;
+}
+
+
 .cayley
 {
 	margin:0 auto;
@@ -75,6 +93,12 @@ fieldset {
 	vertical-align: center;
 	text-align: center;
 	border:1px solid white;
+}
+.cayley td:hover {
+  background-color:lightyellow;
+}
+.cayley th:hover {
+  background-color:grey;
 }
 .cayley .draggable {
   cursor: pointer;

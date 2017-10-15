@@ -71,6 +71,7 @@
                 <td>
                   <fieldset>
                     <legend>Operation <span class="op1name"></span> auf <span class="structSetName"></span></legend>
+                    <div id="op1class"></div>
                     <div class="fscontent">
                       <table>
                         <tr>
@@ -78,6 +79,7 @@
                           <td style="vertical-align:top;">
                             <select id="op1symbol">
                               <optgroup label="additiv">
+                                <option>+</option>
                                 <option>⊕</option>
                                 <option>⊞</option>
                                 <option>⨹</option>
@@ -87,6 +89,7 @@
                                 <option>⨺</option>
                               </optgroup>
                               <optgroup label="multiplikativ">
+                                <option>*</option>
                                 <option>⋆</option>
                                 <option>×</option>
                                 <option>⊛</option>
@@ -122,7 +125,8 @@
                 </td>
                 <td>
                   <fieldset class="twoOp">
-                    <legend>Operation <span class="op2name"></span> auf <span class="structSetName"></span></legend>                    
+                    <legend>Operation <span class="op2name"></span> auf <span class="structSetName"></span></legend>
+                    <div id="op2class"></div>
                     <div class="fscontent">
                       <table>
                         <tr>
@@ -130,6 +134,7 @@
                           <td style="vertical-align:top;">
                             <select id="op2symbol">
                               <optgroup label="additiv">
+                                <option>+</option>
                                 <option>⊕</option>
                                 <option>⊞</option>
                                 <option>⨹</option>
@@ -139,6 +144,7 @@
                                 <option>⨺</option>
                               </optgroup>
                               <optgroup label="multiplikativ">
+                                <option>*</option>
                                 <option>⋆</option>
                                 <option>×</option>
                                 <option>⊛</option>
@@ -358,6 +364,7 @@ function updateFields()
   $("#op1symbol").selectmenu("refresh");
   $("#op1table").html(renderTable(s.ops[0],false,false)+'<br><br>'+renderInvTable(s.ops[0],false));
   $("#op1button").val(s.ops[0].symbol);
+  $("#op1class").html(renderOperationClass(s.ops[0]));
 
   if(s.hasTwoOperations())
   {
@@ -369,6 +376,7 @@ function updateFields()
     $("#op2table").html(renderTable(s.ops[1],false,false)+'<br><br>'+renderInvTable(s.ops[1],false));
     $("#op2button").val(s.ops[1].symbol);
     $("#op2invbutton").val(s.ops[1].inverseSymbol);
+    $("#op2class").html(renderOperationClass(s.ops[1]));
   }
   $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
 
@@ -406,7 +414,7 @@ function sl_addNew(n,name,add,mul)
     }
     if(mul)
     {
-      g.ops.push(new Operation(m,"⊛","(a*b)%n","~"));
+      g.ops.push(new Operation(m,"*","(a*b)%n","~"));
     }
 
     g.name = name;

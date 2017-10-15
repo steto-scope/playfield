@@ -82,3 +82,11 @@ function renderElementTooltip(op,element)
 	o+='</table></span>';
 	return o;
 }
+
+function renderOperationClass(op) {
+	var o = '<table style="border-collapse:collapse" width="100%">';
+ 	o+='<tr class="minorClass"><td rowspan="2" style="font-size:1.2em; text-align:center; vertical-align:middle;">('+op.set.getSymbol()+','+(op.symbol)+'):</td><td class="'+(op.isInner ? "classTrue":"classFalse")+'">innere Verkn.</td><td class="'+(op.isAssoc ? "classTrue":"classFalse")+'">assoziativ</td><td class="'+(op.hasNeutralElement ? "classTrue":"classFalse")+'">neutr. Element</td><td class="'+(op.hasInverse ? "classTrue":"classFalse")+'">Inverse</td></tr>'
+	o+='<tr class="majorClass"><td class="'+(op.isMagma ? "classTrue":"classFalse")+'">Magma</td><td class="'+(op.isSemigroup ? "classTrue":"classFalse")+'">Halbgruppe</td><td class="'+(op.isMonoid ? "classTrue":"classFalse")+'">Monoid</td><td class="'+(op.isGroup ? "classTrue":"classFalse")+'">Gruppe</td></tr>'
+	o+='</table>';
+	return o;
+}
