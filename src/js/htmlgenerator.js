@@ -44,22 +44,20 @@ function renderInvTable(op,hideZero=false) {
 	if(!op.hasNeutralElement)
 		return "";
 
-	var o = '<table class="cayley add inv"><thead><tr><th>a</th>';
+	var o = '<table class="cayley inv"><thead><tr><th>a</th>';
 	for(var i =0; i<op.set.n; i++)
 		if(!(hideZero && i==0))
 			o+='<th>'+op.set.e[i]+'</th>';
-	o+='</tr></thead><tbody><tr><th>'+op.inverseSymbol+'a</th>';
+	o+='<td style="border:none;"></td><th title="Neutrales Element">e</th></tr></thead><tbody><tr><th>'+op.inverseSymbol+'a</th>';
 
 	for(var i =0; i<op.set.n; i++)
 	{
         x = op.inv[op.set.e[i]];
 				if(!(hideZero && j==0))
 					o+='<td class="'+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+(typeof x !== "undefined" ? x : "")+'</td>';
-
-
 	}
 
-	o+='</tr></tbody></table>';
+	o+='<td style="border:none;"></td><td>'+op.neutralElement+'</td></tr></tbody></table>';
 	return o;
 }
 
