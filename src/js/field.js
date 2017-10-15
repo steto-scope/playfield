@@ -23,14 +23,24 @@ Field = function(s)
      this.set.setElements(elements);
      for(var i=0; i<this.ops.length; i++)
       this.ops[i].regenerateTable();
+    this.updateAnnulator();
    };
+
+
+   this.updateAnnulator = function() {
+     if(this.hasTwoOperations() && this.ops[1].annullator !== this.ops[0].neutralElement)
+     {
+       this.ops[1].annullator = this.ops[0].neutralElement;
+       this.ops[1].analyzeStructure();
+     }
+   }
 
 
    this.calculateExpression = function(str)
    {
      if(str.trim().length < 1)
       return "";
-      
+
      jsep.binary_ops = [];
      jsep.unary_ops=[];
      for(var i=0; i<this.ops.length; i++)

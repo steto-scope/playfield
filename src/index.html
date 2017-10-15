@@ -171,7 +171,7 @@
                         </tr>
                         <tr>
                           <th>Generator-Formel:</th>
-                          <td style="vertical-align:top;"><input type="text" id="op2formula" size="25"></input><br><input type="button" id="regenerateTable" value="Verknüpfungstabelle neu generieren"></input><br>
+                          <td style="vertical-align:top;"><input type="text" id="op2formula" size="25"></input><br><input type="button" id="regenerateTable2" value="Verknüpfungstabelle neu generieren"></input><br>
                           <span class="footnote">a: Linker Operand<br>b: Rechter Operand<br>n: Mächtigkeit der Menge<br>%: Modulo-Operator</span></td>
                         </tr>
                       </table>
@@ -390,12 +390,21 @@ function updateFields()
   });
   $(".cayley .dropable").on("drop", function(event){
     event.preventDefault();
+
+    //obtain the operation
+    //a css class is used to transmit the information
     var data=event.originalEvent.dataTransfer.getData("text/text");
     event.target.innerText = data;
-
     var classes = event.target.className.split(' ');
     var op = current().OpBySymbol(classes[1]);
+
+    //update the operator table with the new, dropped element
     op.t[op.set.e[classes[2].substring(4)]][op.set.e[classes[3].substring(4)]] = parseInt(data);
+
+    //update annulator if the neutral element of the first operation differs from 0
+    //required that analyzeStructure of the secondary operation will exclude the neutral element of the primary operation
+    //since the neutral element acts as a annulator and prevents the recognition of a group
+    current().updateAnnulator();
     op.analyzeStructure();
     updateFields();
   });
@@ -599,6 +608,13 @@ $("#op2button").on("click",function( event ) {
 $("#regenerateTable").on("click",function( event ) {
   current().ops[0].tableGeneratorCode = ($("#op1formula")[0].value);
   current().ops[0].regenerateTable();
+  current().updateAnnulator();
+ updateFields();
+});
+$("#regenerateTable2").on("click",function( event ) {
+  current().ops[1].tableGeneratorCode = ($("#op2formula")[0].value);
+  current().ops[1].regenerateTable();
+
  updateFields();
 });
 

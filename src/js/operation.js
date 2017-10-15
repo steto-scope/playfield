@@ -7,6 +7,7 @@ Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix
   this.inverseSymbolIsPrefix = invPrefix;
   this.tableGeneratorCode = genCode;
   this.t = [];
+  this.annullator = false;
 
   this.generateElement = function(a,b,n=this.set.n)
   {
@@ -83,28 +84,28 @@ Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix
   this.isGroup = false;
 
 
-  this.testAssoc = function() {
-   for(var i=0; i<this.set.n; i++)
-     for(var j=0; j<this.set.n; j++)
-       for(var k=0; k<this.set.n; k++)
-         if(this.t[this.t[this.set.e[i]][this.set.e[j]]][this.set.e[k]] != this.t[this.set.e[i]][this.t[this.set.e[j]][this.set.e[k]]])
-           return [this.set.e[i],this.set.e[j],this.set.e[k]];
+  this.testAssoc = function(s) {
+   for(var i=0; i<s.n; i++)
+     for(var j=0; j<s.n; j++)
+       for(var k=0; k<s.n; k++)
+         if(this.t[this.t[s.e[i]][s.e[j]]][s.e[k]] != this.t[s.e[i]][this.t[s.e[j]][s.e[k]]])
+           return [s.e[i],s.e[j],s.e[k]];
    return true;
    };
 
-   this.testInner = function() {
-     for(var i=0; i<this.set.n; i++)
-       for(var j=0; j<this.set.n; j++)
-         if(!this.set.e.includes(this.t[this.set.e[i]][this.set.e[j]]))
-           return this.t[this.set.e[i]][this.set.e[j]];
+   this.testInner = function(s) {
+     for(var i=0; i<s.n; i++)
+       for(var j=0; j<s.n; j++)
+         if(!s.e.includes(this.t[s.e[i]][s.e[j]]))
+           return this.t[s.e[i]][s.e[j]];
      return true;
    };
 
-   this.testCom = function() {
- 		for(var i=0; i<this.set.n; i++)
- 			for(var j=0; j<this.set.n; j++)
+   this.testCom = function(s) {
+ 		for(var i=0; i<s.n; i++)
+ 			for(var j=0; j<s.n; j++)
  					if(this.map(i,j,true) != this.map(j,i,true))
- 						return [this.set.e[i],this.set.e[j]];
+ 						return [s.e[i],s.e[j]];
  		return true;
  	};
 
@@ -129,15 +130,24 @@ Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix
 
    this.analyzeStructure = function() {
 
-     this.commutativeError = this.testCom();
+     var s = this.set;
+     if(this.annullator !== false)
+     {
+       s = {n:this.set.n-1, e:[] };
+       for(var i=0; i<this.set.n;i++)
+        if(this.set.e[i] != this.annullator)
+          s.e.push(this.set.e[i]);
+     }
+
+     this.commutativeError = this.testCom(s);
      this.isCommutative = this.commutativeError === true;
 
-     this.innerError = this.testInner();
+     this.innerError = this.testInner(s);
      this.isInner = this.innerError === true;
 
      this.isMagma = this.isInner;
 
-     this.assocError = this.testAssoc();
+     this.assocError = this.testAssoc(s);
      this.isAssoc = this.assocError === true;
 
      this.isSemigroup = this.isMagma && this.isAssoc;
@@ -149,11 +159,14 @@ Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix
      this.isMonoid = this.isSemigroup && this.hasNeutralElement;
 
      //inverse elements
+     this.hasInverse = this.hasNeutralElement;
      for(var i=0; i<this.set.n; i++)
      {
        this.inv[this.set.e[i]] = this.inverseOf(this.set.e[i]);
+       if(typeof this.inv[this.set.e[i]] === "undefined" && this.set.e[i] != this.annullator)
+        this.hasInverse = false;
      }
-     this.hasInverse = !this.inv.includes(undefined) && this.hasNeutralElement;
+     
 
      this.isGroup = this.isMonoid && this.hasInverse;
 
@@ -227,8 +240,8 @@ Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix
 
 
 
-  this.toString = function(){
-    return this.symbol;
+  this.toString = function(group){
+    return this.symbol/*+(group && this.annullator !== false ? "\\{"+this.annullator+"}" : "")*/;
   };
 
 };
