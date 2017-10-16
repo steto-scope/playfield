@@ -46,6 +46,12 @@
             <table>
               <tr>
                 <td>
+                </td>
+                <td colspan="2" id="twoOpClass"></td>
+              </tr>
+
+              <tr>
+                <td>
                   <fieldset>
                     <legend>Menge von <span class="structName"></span></legend>
                     <div class="fscontent">
@@ -179,6 +185,7 @@
                   </fieldset>
                 </td>
                 </tr>
+
                 <tr>
                   <td>
                     <fieldset>
@@ -196,6 +203,7 @@
                     <div class="opTable twoOp" id="op2table"></div>
                   </td>
                 </tr>
+
             </table>
           </div>
         </div>
@@ -270,6 +278,9 @@
           <li>
             <strong>v0.4</strong>
             <ul>
+              <li>Fix: Nullring wird nicht mehr als Körper erkannt</li>
+              <li>Test auf Distributivität, Ringe und Körper</li>
+              <li>Anzeige der Art der Strukturen</li>
               <li>Strukturen mit zwei Operationen</li>
             </ul>
           </li>
@@ -377,6 +388,11 @@ function updateFields()
     $("#op2button").val(s.ops[1].symbol);
     $("#op2invbutton").val(s.ops[1].inverseSymbol);
     $("#op2class").html(renderOperationClass(s.ops[1]));
+    $("#twoOpClass").html(renderStructClass(s));
+  }
+  else
+  {
+    $("#twoOpClass").html("");
   }
   $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
 
@@ -406,6 +422,7 @@ function updateFields()
     //since the neutral element acts as a annulator and prevents the recognition of a group
     current().updateAnnulator();
     op.analyzeStructure();
+    current().analyzeStructure();
     updateFields();
   });
 
@@ -609,12 +626,13 @@ $("#regenerateTable").on("click",function( event ) {
   current().ops[0].tableGeneratorCode = ($("#op1formula")[0].value);
   current().ops[0].regenerateTable();
   current().updateAnnulator();
+  current().analyzeStructure();
  updateFields();
 });
 $("#regenerateTable2").on("click",function( event ) {
   current().ops[1].tableGeneratorCode = ($("#op2formula")[0].value);
   current().ops[1].regenerateTable();
-
+  current().analyzeStructure();
  updateFields();
 });
 

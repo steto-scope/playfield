@@ -56,20 +56,23 @@ fieldset {
 
 
 .classTrue {
-  background-color:lightgreen;
+  background-color:#b5ffbc;
   text-align: center;
-  border:1px solid black;
+  border:1px solid white;
 }
 .classFalse {
-  background-color: salmon;
+  background-color: #ffb4b4;
   text-align: center;
-  border:1px solid black;
+  border:1px solid white;
 }
 .minorClass {
   font-size: 0.8em;
 }
 .majorClass {
   font-weight: bold;
+}
+#twoOpClass {
+  padding:13px;
 }
 
 

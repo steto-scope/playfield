@@ -142,12 +142,12 @@ Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix
      this.commutativeError = this.testCom(s);
      this.isCommutative = this.commutativeError === true;
 
-     this.innerError = this.testInner(s);
+     this.innerError = this.testInner(this.set);
      this.isInner = this.innerError === true;
 
      this.isMagma = this.isInner;
 
-     this.assocError = this.testAssoc(s);
+     this.assocError = this.testAssoc(this.set);
      this.isAssoc = this.assocError === true;
 
      this.isSemigroup = this.isMagma && this.isAssoc;
@@ -166,7 +166,7 @@ Operation = function(set=[],symbol="+",genCode="(a+b)%n",invSymbol="-",invPrefix
        if(typeof this.inv[this.set.e[i]] === "undefined" && this.set.e[i] != this.annullator)
         this.hasInverse = false;
      }
-     
+
 
      this.isGroup = this.isMonoid && this.hasInverse;
 
