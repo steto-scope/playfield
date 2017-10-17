@@ -1,5 +1,11 @@
 
-function renderTable(op,hideZero=false,hideInverse=false)
+/**
+ * generates the HTML of a cayley table
+ * @param {Operation} op the operation that shall be displayed
+ * @param {boolean} hideZero true if zeros should be not displayed, default: false
+ * @return {string} HTML
+ */
+function renderTable(op,hideZero=false)
 {
 	var o = '<table class="cayley '+op.symbol+'"><thead><tr><th>'+op.symbol+'</th>';
 	for(var i =0; i<op.set.n; i++)
@@ -7,17 +13,6 @@ function renderTable(op,hideZero=false,hideInverse=false)
 			o+='<th class="draggable" title="Ziehe die Tabellenüberschrift in die Zellen um die Verknüpfungstabelle manuell zu verändern">'+op.set.e[i]+'</th>';
 	o+='</tr></thead><tbody>';
 
-/*
-	if(!hideInverse)
-	{
-		//todo: use of inverseAddTable()
-		o+='<tr><th class="inv">Inv</th>';
-		for(var i =0; i<table[0].length; i++)
-			if(!(hideZero && i==0))
-				o+='<td class="inv '+(Polynom_toString([NumberSystem.inverseTo(NumberSystem.zero,i,operation)]) == Polynom_toString(NumberSystem.toPolynom(i)) ? "selfinverse":  "")+'">'+Polynom_toString([NumberSystem.inverseTo(NumberSystem.zero,i,operation)])+'</td>';
-		o+='</tr>';
-	}
-*/
 	for(var i =0; i<op.set.n; i++)
 	{
 		if(!(hideZero && i==0))
@@ -28,8 +23,6 @@ function renderTable(op,hideZero=false,hideInverse=false)
         x = op.map(i,j,true);
 				if(!(hideZero && j==0))
 					o+='<td class="dropable '+op.symbol+' row_'+i+' col_'+j+' '+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+x+renderElementTooltip(op,x)+'</td>';
-					/*if(i==0 && j==op.set.n-1)
-					o+='<td style="border:none;" rowspan="100"><span class="tooltip"><table><tr><th>Element:</th><td><span class="toolt"</td></tr></td>';*/
 			}
 			o+='</tr>';
 		}
@@ -39,6 +32,12 @@ function renderTable(op,hideZero=false,hideInverse=false)
 	return o;
 }
 
+/**
+ * generates the HTML for the table displaying inverses and the neutral element
+ * @param {Operation} op the operation of the inverses
+ * @param {boolean} hideZero true if zeros should be not displayed, default: false
+ * @return {string} HTML
+ */
 function renderInvTable(op,hideZero=false) {
 
 	if(!op.hasNeutralElement)
@@ -52,15 +51,21 @@ function renderInvTable(op,hideZero=false) {
 
 	for(var i =0; i<op.set.n; i++)
 	{
-        x = op.inv[op.set.e[i]];
-				if(!(hideZero && j==0))
-					o+='<td class="'+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+(typeof x !== "undefined" ? x : "")+'</td>';
+      x = op.inv[op.set.e[i]];
+			if(!(hideZero && j==0))
+				o+='<td class="'+(op.set.e.indexOf(x)<0?"noElement":"")+'">'+(typeof x !== "undefined" ? x : "")+'</td>';
 	}
 
 	o+='<td style="border:none;"></td><td>'+op.neutralElement+'</td></tr></tbody></table>';
 	return o;
 }
 
+/**
+ * generates the HTML of an element mouseover tooltip
+ * @param {Operation} op the operation
+ * @param {number} element the element
+ * @return {string} HTML
+ */
 function renderElementTooltip(op,element)
 {
 	var info = op.elementInfo[element];
@@ -85,7 +90,13 @@ function renderElementTooltip(op,element)
 	return o;
 }
 
-function renderOperationClass(op) {
+/**
+ * generates the HTML for an operation's structure type info
+ * @param {Operation} op operation
+ * @return {string} HTML
+ */
+function renderOperationClass(op)
+{
 	var o = '<table style="border-collapse:collapse" width="100%">';
  	o+='<tr class="minorClass"><td rowspan="2" style="font-size:1.2em; text-align:center; vertical-align:middle;">('+op.set.getSymbol()+(op.annullator!==false?"\\{"+op.annullator+"}":"")+','+(op.symbol)+'):</td><td class="'+(op.isInner ? "classTrue":"classFalse")+'">innere Verkn.</td><td class="'+(op.isAssoc ? "classTrue":"classFalse")+'">assoziativ</td><td class="'+(op.hasNeutralElement ? "classTrue":"classFalse")+'">neutr. Element</td><td class="'+(op.hasInverse ? "classTrue":"classFalse")+'">Inverse</td></tr>'
 	o+='<tr class="majorClass"><td class="'+(op.isMagma ? "classTrue":"classFalse")+'">Magma</td><td class="'+(op.isSemigroup ? "classTrue":"classFalse")+'">Halbgruppe</td><td class="'+(op.isMonoid ? "classTrue":"classFalse")+'">Monoid</td><td class="'+(op.isGroup ? "classTrue":"classFalse")+'">Gruppe</td></tr>'
@@ -93,7 +104,13 @@ function renderOperationClass(op) {
 	return o;
 }
 
-function renderStructClass(s) {
+/**
+ * generates the HTML for an structure type info
+ * @param {Field} s structure
+ * @return {string} HTML
+ */
+function renderStructClass(s)
+{
 	var o = '<table style="border-collapse:collapse" width="100%">';
  	o+='<tr class="minorClass"><!--<td class="ElCaption" rowspan="2" style="text-align:center; vertical-align:middle;">'+s+':</td>--><td colspan="5" class="'+(s.isDistributive ? "classTrue":"classFalse")+'">distributiv</td></tr>'
 	o+='<tr class="majorClass"><td class="'+(s.isRing ? "classTrue":"classFalse")+'">Ring</td><td class="'+(s.isRingWith1 ? "classTrue":"classFalse")+'">Ring mit 1</td><!--<td class="'+(s.isDivisionring ? "classTrue":"classFalse")+'">Divisionsring</td>--><td class="'+(s.isField ? "classTrue":"classFalse")+'">Körper</td></tr>'

@@ -1,13 +1,25 @@
-
-Field = function(s)
+/**
+ * Represents a structure
+ */
+Structure = function(s)
 {
+  /**
+   * the underlaying set of the structure
+   */
   this.set = s;
+  /**
+   * name of the structure
+   */
   this.name = "?";
-  this.getName = function(){ return this.name;};
-
-  this.ops = [];//op2===false ? [op] : [op,op2];
+  /**
+   * operations used in the structure
+   */
+  this.ops = [];
+  /**
+   * checks if the structure has two operations
+   * @return {boolean}
+   */
   this.hasTwoOperations = function() {return this.ops.length>1; };
-
   this.isDistributive = false;
   this.isRing = false;
   this.isRingWith1 = false;
@@ -15,18 +27,37 @@ Field = function(s)
   this.isField = false;
   this.isNullring = false;
 
-  this.OpBySymbol = function(symbol,inv=false) {
+  /**
+   * gets the operator ojbject based on the operator symbol
+   * @param {string} symbol the symbol of the operation
+   * @param {boolean} inv if true, the symbol of the inverse-notation is used instead of the regular one
+   * @return {Operation} operation-object or undefined if not found
+   */
+  this.OpBySymbol = function(symbol,inv=false)
+  {
     for(var i=0; i<this.ops.length; i++)
       if( (!inv && this.ops[i].symbol == symbol) || (inv && this.ops[i].inverseSymbol == symbol) )
         return this.ops[i];
     return undefined;
   }
 
-   this.toString = function(){
+   /**
+    * string representing of the structure
+    * @return {string}
+    */
+   this.toString = function()
+   {
      return this.name + " = ("+this.set.getSymbol()+","+this.ops.join(",")+")";
    };
 
-   this.setElements = function(elements) {
+   /**
+    * sets the elements of the set, regenerates the cayley tables and structure information
+    * @param {number} elements set all numbers ranging [0,n)
+    * @param {array} elements set all unique elements
+    * @param {string} elements parse the string (comma, semicolon or whitespace separated) and use unique elements
+    */
+   this.setElements = function(elements)
+   {
      this.set.setElements(elements);
      for(var i=0; i<this.ops.length; i++)
       this.ops[i].regenerateTable();
@@ -34,8 +65,11 @@ Field = function(s)
     this.analyzeStructure();
    };
 
-
-   this.updateAnnulator = function() {
+   /**
+    * updates the annullator (all zero element in multiplicative operations) in 2 operator structures
+    */
+   this.updateAnnulator = function()
+   {
      if(this.hasTwoOperations() && this.ops[1].annullator !== this.ops[0].neutralElement)
      {
        this.ops[1].annullator = this.ops[0].neutralElement;
@@ -43,7 +77,12 @@ Field = function(s)
      }
    }
 
-   this.testDistributive = function() {
+   /**
+    * checks if the first two operations are distributive
+    * @return {boolean}
+    */
+   this.testDistributive = function()
+   {
      var s = this.set;
      for(var i=0; i<s.n; i++)
        for(var j=0; j<s.n; j++)
@@ -54,7 +93,11 @@ Field = function(s)
      return true;
    };
 
-   this.analyzeStructure = function() {
+   /**
+    * analyses the 2 operation structure and updates the structural information stored in the object
+    */
+   this.analyzeStructure = function()
+   {
      if(this.hasTwoOperations())
      {
        this.isNullring = this.set.n == 1;
@@ -66,7 +109,11 @@ Field = function(s)
       }
    }
 
-
+   /**
+    * evaluates an arithmetic expression on the structure
+    * @param {string} str the expression string entered by the user
+    * @return {string} the result of the calculation or an error
+    */
    this.calculateExpression = function(str)
    {
      if(str.trim().length < 1)
@@ -78,7 +125,7 @@ Field = function(s)
      {
        jsep.addBinaryOp(this.ops[i].symbol,9+i);
        jsep.addUnaryOp(this.ops[i].inverseSymbol);
-    }
+     }
 
      try
      {
@@ -91,8 +138,14 @@ Field = function(s)
      }
    }
 
+   /**
+    * evaluates an expression treenode recursively
+    * @param {Node} node a jsep parsed AST node
+    * @return {number} calculation result
+    */
    this.evaluateNode = function(node)
    {
+     //leaf - node with just a value
      if(node.hasOwnProperty("value"))
      {
        if(!this.set.e.includes(node.value))
@@ -100,19 +153,22 @@ Field = function(s)
       return node.value;
      }
 
+     //unary operation, like an inverse operator
      if(node.type == "UnaryExpression")
      {
        var op = this.OpBySymbol(node.operator,true);
+       var exp = this.evaluateNode(node.argument);
+       var inv = op.inv[exp];
 
-        var exp = this.evaluateNode(node.argument);
-
-         var inv = op.inv[exp];
-
-         if(typeof inv === "undefined")
-          throw "Inverses Element zu "+node.argument.value+" existiert nicht";
-        else
-          return inv;
+       if(typeof exp === "undefined")
+         throw "";
+       if(typeof inv === "undefined")
+         throw "Inv. Element bzgl. "+op.symbol+" zu "+exp+" existiert nicht";
+       else
+         return inv;
      }
+
+     //binary operation
      if(node.type == "BinaryExpression")
      {
        var op = this.OpBySymbol(node.operator);

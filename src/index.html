@@ -9,15 +9,15 @@
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
     <title>Galois' Playfield</title>
-	<script src="js/set.js"></script>
-  <script src="js/operation.js"></script>
-  <script src="js/field.js"></script>
-  <script src="js/htmlgenerator.js"></script>
-  <script src="js/jsep/jsep.min.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="playfield.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<script src="js/set.js"></script>
+    <script src="js/operation.js"></script>
+    <script src="js/structure.js"></script>
+    <script src="js/htmlgenerator.js"></script>
+    <script src="js/jsep/jsep.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="playfield.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
   <body>
     <div class="main">
@@ -40,7 +40,7 @@
 
         <div id="maintabs">
           <ul>
-            <li><a href="#mainStructureTab">Einstellungen von <span class="structName"></span></a></li>
+            <li><a href="#mainStructureTab">Struktur <span class="structName"></span></a></li>
           </ul>
           <div class="structureTab" id="mainStructureTab">
             <table>
@@ -212,21 +212,33 @@
         <form>
             <fieldset>
               <p>
+                <select id="preset">
+                  <optgroup label="1 Operator">
+                    <option value="addSemigroup">(additive) Halbgruppe</option>
+                    <option value="addMonoid">(additiver) Monoid</option>
+                    <option value="addGroup">(additive) Gruppe</option>
+                    <option value="mulSemigroup">(multiplikative) Halbgruppe</option>
+                    <option value="mulMonoid">(multiplikativer) Monoid</option>
+                    <option value="mulGroup">(multiplikative) Gruppe</option>
+                  </optgroup>
+                  <optgroup label="2 Operatoren">
+                    <option value="simpleRing">Ring</option>
+                    <option value="ring1">Ring mit 1</option>
+                    <option value="nullring">Nullring</option>
+                    <option value="simpleField" selected>Körper</option>
+                    <option value="invField">Körper mit abw. neutr. Elementen</option>
+                  </optgroup>
+                </select>
+              </p>
+              <p>
               <label for="name">Name: </label>
               <input type="text" name="name" id="name" size="2" value="G" class="text ui-widget-content ui-corner-all">
             </p>
             <p>
               <label for="n">Menge ℤ<sub>n</sub>: n=</label>
-              <input id="n" value="2" size="2">
+              <input id="n" value="3" size="2">
             </p>
-            <p>
-              <div class="controlgroup" style="display:none;">
-                <label for="addop">Addition</label>
-                <input type="checkbox" id="addop" name="opgroup" checked>
-                <label for="mulop">Multiplikation</label>
-                <input type="checkbox" id="mulop" name="opgroup">
-              </div>
-            </p>
+
               <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
             </fieldset>
           </form>
@@ -278,6 +290,7 @@
           <li>
             <strong>v0.4</strong>
             <ul>
+              <li>Hinzufügen-Dialog mit Vorlagen</li>
               <li>Fix: Nullring wird nicht mehr als Körper erkannt</li>
               <li>Test auf Distributivität, Ringe und Körper</li>
               <li>Anzeige der Art der Strukturen</li>
@@ -319,6 +332,10 @@ function current() {
   return c;
 }
 
+/**
+ * suggests a name for a new struct
+ * @return {string} character for the new struct
+ */
 function nameSuggestion()
 {
   var suggestion = "A";
@@ -342,9 +359,11 @@ function nameSuggestion()
   return suggestion;
 }
 
+/**
+ * makes the content area visible or invisible
+ */
 function structChanged()
 {
-  c = structureList[document.getElementById('structSelection').value];
   if($("#structSelection")[0].selectedIndex < 0)
   {
     $("#maintabs").hide();
@@ -356,6 +375,9 @@ function structChanged()
   }
 }
 
+/**
+ * updates the input/output fields in the content area with the current data.
+ */
 function updateFields()
 {
   var s = current();
@@ -363,7 +385,7 @@ function updateFields()
   $(".twoOp").css("visibility",s.hasTwoOperations()?"visible":"collapse");
   $("#elementsStr")[0].innerHTML = s.set;
   $("#elements")[0].value = s.set.toString("elements");
-  $(".structName").html(s.getName());
+  $(".structName").html(s.name);
   $(".structSetName").html(s.set.getSymbol());
   $(".structSetCard").html(s.set.n);
   $("#setSymbol")[0].value = s.set.symbol;
@@ -425,32 +447,96 @@ function updateFields()
     current().analyzeStructure();
     updateFields();
   });
-
 }
 
-function sl_addNew(n,name,add,mul)
+/**
+ * adds a new structure to the main list. Will cause an update to the view as well
+ *
+ * @param {number} n preferred number of elements
+ * @param {string} name name of the structure
+ * @param {string} preset preset that is used to create the operations. A non existing preset will return false
+ * @return {boolean} true if sucessfully added, false when not added.
+ */
+function sl_addNew(n,name,preset)
 {
   var m = new Set();
-  //if((add ^ mul))
-  {
-    var g = new Field(m);
-    if(add)
-    {
-      g.ops.push(new Operation(m));
-    }
-    if(mul)
-    {
-      g.ops.push(new Operation(m,"*","(a*b)%n","~"));
-    }
 
-    g.name = name;
-    g.setElements(n);
-    structureList.push(g);
+  //modify n if preset is a special one
+  switch(preset)
+  {
+    case "nullring": n = 1; break;
+    case "invField": n = 3; break;
   }
+
+  var s = new Structure(m);
+
+  //create the operation(s) appropriately
+  switch(preset)
+  {
+    case "addSemigroup":
+      s.ops.push(new Operation(m,'+',"a","-"));
+      break;
+    case "addMonoid":
+      s.ops.push(new Operation(m,'+',"a==0?b:(b==0?a:(a==0&&b==0?0:1))","-"));
+      break;
+    case "addGroup":
+      s.ops.push(new Operation(m));
+      break;
+    case "mulSemigroup":
+      s.ops.push(new Operation(m,'*',"b","~"));
+      break;
+    case "mulMonoid":
+        if(isPrime(n))
+          n++; //if n is not prime, there're (mostly) zero dividers, which prevents a group
+        s.ops.push(new Operation(m,"*","(a*b)%n","~"));
+        break;
+    case "mulGroup":
+        if(!isPrime(n)) //if n is prime, a group is guaranteed, so make sure it is prime
+          n=3;
+        s.ops.push(new Operation(m,"*","(a*b)%n","~"));
+        break;
+
+    case "simpleField": //uses the advantage of switch/case without break
+        if(!isPrime(n))
+          n=3;
+    case "nullring":
+        s.ops.push(new Operation(m));
+        s.ops.push(new Operation(m,"*","(a*b)%n","~"));
+        break;
+    case "simpleRing":
+        s.ops.push(new Operation(m));
+        s.ops.push(new Operation(m,"*","b","~"));
+        break;
+    case "ring1":
+        s.ops.push(new Operation(m));
+        if(isPrime(n))
+          n++;
+        s.ops.push(new Operation(m,"*","(a*b)%n","~"));
+        break;
+
+    case "invField":
+      s.ops.push(new Operation(m,'+',"((a+b)%n+n-1)%n",'-'));
+      s.ops.push(new Operation(m,"*","a==1||b==1?1:a!=b?0:2","~"));
+      break;
+
+    default:
+      return false;
+  }
+
+  s.name = name;
+  s.setElements(n);
+
+
+  structureList.push(s);
   update_sl();
   structChanged();
+  return true;
 }
 
+/**
+ * deletes a structure from the main list. will cause an update to the view as well
+ * @param {number} index index in the list
+ */
 function sl_delete(index)
 {
   structureList.splice(index,1);
@@ -458,6 +544,10 @@ function sl_delete(index)
   updateFields();
 }
 
+/**
+ * updates the view of the main list on the right side and shows/hides the content if empty / not empty anymore.
+ * @param {boolean} selectLast if true, the last element in the selection menu will be selected
+ */
 function update_sl(selectLast=true) {
   var o = "";
   for(var i=0; i<structureList.length; i++)
@@ -486,24 +576,63 @@ function update_sl(selectLast=true) {
 
 }
 
+/**
+ * checks if a number is prime
+ * @param {number} integer to check
+ * @return {boolean} true if prime
+ * @source https://stackoverflow.com/questions/40200089/is-a-number-prime
+ */
+function isPrime(num) {
+        var isPrime = true;
+        if (num >= 2) {
+            if(num == 2 || num == 3){
+               isPrime = true;
+            }
+            else if (num % 2 == 0) {
+                isPrime = false;
+            }
+            else {
+                for (i = 3; i <= Math.floor(Math.sqrt(num)); i += 2) {
+                    if (num % i == 0) {
+                        isPrime = false;
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            isPrime = false;
+        }
+        return isPrime;
+    }
+
+
 
 /* add structure */
  var dialog, form, about;
 
+/**
+ * event handler of the add structure submit dialog button.
+ * checks if everything is ok with the selection and, if ok, adds the new structure to the list
+ * @return {boolean} true if successful
+ */
 function addStructure() {
-  var name = $( "#name" )[0].value, n = $( "#n" ), addop=$("#addop"), mulop=$("#mulop");
+  var name = $( "#name" )[0].value, n = $( "#n" );
   var valid = true;
   valid = valid && name.trim().length > 0;
   valid = valid && parseInt(n[0].value) >=0 && parseInt(n[0].value) <=32;
-  valid = valid && (addop[0].checked || mulop[0].checked);
   if(valid)
   {
-    sl_addNew(parseInt(n[0].value),name.trim(),addop[0].checked,mulop[0].checked);
-
+    valid = sl_addNew(parseInt(n[0].value),name.trim(),$("#preset").val());
+  }
+  if(valid)
+  {
     dialog.dialog("close");
   }
+
   return valid;
-}
+};
+
 
 dialog = $( "#createNewDialog" ).dialog({
   autoOpen: false,
@@ -525,11 +654,11 @@ form = dialog.find( "form" ).on( "submit", function( event ) {
   event.preventDefault();
   addStructure();
 });
+
 $("#n").spinner();
 $("#n").spinner('option', 'min',0);
 $("#n").spinner('option', 'max',32);
-$("#addop").checkboxradio({icon:false});
-$("#mulop").checkboxradio({icon:false});
+$("#preset").selectmenu();
 $(".controlgroup").controlgroup();
 
 
@@ -636,11 +765,6 @@ $("#regenerateTable2").on("click",function( event ) {
  updateFields();
 });
 
-
-
- //test
-sl_addNew(4,"A",true,false);
-sl_addNew(5,"B",true,true);
 
   </script>
 </html>
