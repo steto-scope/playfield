@@ -192,7 +192,8 @@
                       <legend>Rechnen in <span class="structName"></span></legend>
                       <div class="fscontent">
                         <input type="text" id="calcExpression"></input> <input type="button" id="op1button"></input><input type="button" class="twoOp" id="op2button"></input><br><br>
-                        Ergebnis: <span id="calcResult"></span>
+                        Ergebnis: <span id="calcResult"></span><br><br>
+                        Rechnung:<br><div id="exprEvaluation"></div>
                       </div>
                     </fieldset>
                   </td>
@@ -736,7 +737,18 @@ about = $( "#about" ).dialog({
    update_sl(false);
  });
  $("#calcExpression").on("keyup", function( event ) {
-  $("#calcResult").html(current().calculateExpression($("#calcExpression").val()));
+   var res = current().calculateExpression($("#calcExpression").val());
+   if(typeof res === "string")
+   {
+     $("#calcResult").html(res);
+     $("#exprEvaluation").html("");
+   }
+   else
+   {
+     $("#calcResult").html(res.result);
+     $("#exprEvaluation").html(renderExpressionEvaluation(res));
+   }
+
   //updateFields();
 });
 $("#op1button").on("click",function( event ) {

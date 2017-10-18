@@ -117,3 +117,59 @@ function renderStructClass(s)
 	o+='</table>';
 	return o;
 }
+
+
+function renderExpressionEvaluation(output)
+{
+	var o = '<table class="exprTable">';
+	o+='<tr><td>'+output.str.split('').join('</td><td>')+'</td> <td></td><td></td></tr>';
+
+	tmpResult = Array(output.log.length);
+
+	for(var i=0; i<output.log.length; i++)
+	{
+		var p = output.log[i][1];
+
+		o+='<tr>';
+
+
+		if(output.log[i][4] == "BinaryExpression")
+		{
+			if(output.log[i][1]>0)
+				o+='<td colspan="'+output.log[i][1]+'"></td>';
+
+			var l = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][5];
+			var r = typeof tmpResult[output.log[i][2]] !== "undefined" ? tmpResult[output.log[i][2]] : output.log[i][6];
+
+			o+='<td colspan="'+l.toString().length+'">'+l+'</td>';
+			p+=l.toString().length;
+
+			if(output.log[i][2]-p-1 > 0)
+				o+='<td colspan="'+(output.log[i][2]-p-1)+'"></td>';
+			p+=(output.log[i][2]-p-1);
+
+			o+='<td>'+output.log[i][3]+'</td>';
+			o+='<td colspan="'+r.toString().length+'">'+r+'</td>';
+			p+=r.toString().length+1;
+		}
+		else
+		{
+			if(output.log[i][1]-1>0)
+				o+='<td colspan="'+(output.log[i][1]-1)+'"></td>';
+
+			var r = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][5];
+			o+='<td>'+output.log[i][3]+'</td>';
+			o+='<td colspan="'+r.toString().length+'">'+r+'</td>';
+			p+=r.toString().length+1;
+		}
+
+		if(output.length-p-1 > 0)
+			o+='<td colspan="'+(output.length-p)+'"></td>';
+		o+='<td>=</td><td>'+output.log[i][0]+'</td>';
+
+		tmpResult[output.log[i][1]] = output.log[i][0];
+		o+='</tr>';
+	}
+	o+='</table>';
+	return o;
+}

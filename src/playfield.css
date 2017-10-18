@@ -75,6 +75,11 @@ fieldset {
   padding:13px;
 }
 
+.exprTable td, .exprTable table {
+  padding:0px;
+  border-collapse: collapse;
+}
+
 
 .cayley
 {

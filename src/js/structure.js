@@ -119,6 +119,8 @@ Structure = function(s)
      if(str.trim().length < 1)
       return "";
 
+     str = str.replace(" ","");
+
      jsep.binary_ops = [];
      jsep.unary_ops=[];
      for(var i=0; i<this.ops.length; i++)
@@ -130,7 +132,9 @@ Structure = function(s)
      try
      {
        var ast = jsep(str);
-       return this.evaluateNode(ast);
+       var output = {str:str, length:str.length, log:Array(), result:""};
+       this.evaluateNode(ast,output);
+       return output;
      }
      catch(e)
      {
@@ -143,29 +147,37 @@ Structure = function(s)
     * @param {Node} node a jsep parsed AST node
     * @return {number} calculation result
     */
-   this.evaluateNode = function(node)
+   this.evaluateNode = function(node,output)
    {
      //leaf - node with just a value
      if(node.hasOwnProperty("value"))
      {
        if(!this.set.e.includes(node.value))
         throw node.value+" ∉ "+this.set.getSymbol(true);
-      return node.value;
+
+      output.result = node.value;
+      return [node.value,node.index,node.length,node.type,node.value];
      }
 
      //unary operation, like an inverse operator
      if(node.type == "UnaryExpression")
      {
        var op = this.OpBySymbol(node.operator,true);
-       var exp = this.evaluateNode(node.argument);
-       var inv = op.inv[exp];
+       var exp = this.evaluateNode(node.argument,output);
+       var inv = op.inv[exp[0]];
 
-       if(typeof exp === "undefined")
+
+       if(typeof exp[0] === "undefined")
          throw "";
        if(typeof inv === "undefined")
-         throw "Inv. Element bzgl. "+op.symbol+" zu "+exp+" existiert nicht";
+         throw "Inv. Element bzgl. "+op.symbol+" zu "+exp[0]+" existiert nicht";
        else
-         return inv;
+       {
+         output.result = inv;
+         output.log.push([inv,exp[1],exp[2],op.inverseSymbol,node.type,exp[0]]);
+         //console.log([inv,exp[1],exp[2],op.symbol,node.type,exp[0]]);
+         return [inv,exp[1],exp[2],op.symbol,node.type,exp[0]];
+       }
      }
 
      //binary operation
@@ -175,10 +187,13 @@ Structure = function(s)
        if(!op)
         throw "Unbekannter Operator "+node.operator;
 
-       var left = this.evaluateNode(node.left);
-       var right = this.evaluateNode(node.right);
+       var left = this.evaluateNode(node.left,output);
+       var right = this.evaluateNode(node.right,output);
 
-       return op.map(left, right);
+       var n = op.map(left[0], right[0]);
+       output.result = n;
+       output.log.push([n,left[1],right[1],op.symbol,node.type,left[0],right[0]]);
+       return [n,left[1],right[1],op.symbol,node.type,left[0],right[0]];
      }
    }
 
