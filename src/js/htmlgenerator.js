@@ -121,7 +121,7 @@ function renderStructClass(s)
 
 function renderExpressionEvaluation(output)
 {
-	var o = '<table class="exprTable">';
+	var o = '<table border=1 class="exprTable">';
 	o+='<tr><td>'+output.str.split('').join('</td><td>')+'</td> <td></td><td></td></tr>';
 
 	tmpResult = Array(output.log.length);
