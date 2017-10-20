@@ -75,10 +75,17 @@ fieldset {
   padding:13px;
 }
 
-.exprTable td, .exprTable table {
-  padding:0px;
-  border-collapse: collapse;
+.exprResult {
   font-family: monospace;
+  font-size:1.2em;
+}
+#calcResult {
+  font-weight: bold;
+  font-size:1.5em;
+}
+#calcResult .error {
+  font-weight: normal;
+  font-size: 0.7em;
 }
 
 

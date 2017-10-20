@@ -83,14 +83,21 @@ Structure = function(s)
     */
    this.testDistributive = function()
    {
-     var s = this.set;
-     for(var i=0; i<s.n; i++)
-       for(var j=0; j<s.n; j++)
-         for(var k=0; k<s.n; k++)
-           if( ! (this.ops[1].map(this.set.e[i],this.ops[0].map(j,k,true)) == this.ops[0].map(this.ops[1].map(i,j,true),this.ops[1].map(i,k,true))) &&
-                 (this.ops[1].map(this.ops[0].map(i,j,true),this.set.e[k]) == this.ops[0].map(this.ops[1].map(i,k,true),this.ops[1].map(j,k,true)))  )
-             return [s.e[i],s.e[j],s.e[k]];
-     return true;
+     try
+     {
+       var s = this.set;
+       for(var i=0; i<s.n; i++)
+         for(var j=0; j<s.n; j++)
+           for(var k=0; k<s.n; k++)
+             if( ! (this.ops[1].map(this.set.e[i],this.ops[0].map(j,k,true)) == this.ops[0].map(this.ops[1].map(i,j,true),this.ops[1].map(i,k,true))) &&
+                   (this.ops[1].map(this.ops[0].map(i,j,true),this.set.e[k]) == this.ops[0].map(this.ops[1].map(i,k,true),this.ops[1].map(j,k,true)))  )
+               return [s.e[i],s.e[j],s.e[k]];
+       return true;
+     }
+     catch(e)
+     {
+       return false;
+     }
    };
 
    /**
@@ -112,12 +119,19 @@ Structure = function(s)
    /**
     * evaluates an arithmetic expression on the structure
     * @param {string} str the expression string entered by the user
-    * @return {string} the result of the calculation or an error
+    * @return {object} the result of the calculation or an error string.
+    * @
     */
    this.calculateExpression = function(str)
    {
      if(str.trim().length < 1)
       return "";
+
+     var assoc = true;
+     for(var i=0; i<this.ops.length; i++)
+      assoc = assoc && this.ops[i].isAssoc;
+     if(!assoc)
+      return '<span class="error">Der Parser unterstützt (zurzeit) nur assoziative Strukturen</span>';
 
      str = str.replace(" ","");
 
@@ -134,6 +148,8 @@ Structure = function(s)
        var ast = jsep(str);
        var output = {str:str, length:str.length, log:Array(), result:""};
        this.evaluateNode(ast,output);
+       //todo: the operator-index of intermediate results is wrong if there's a right-sided bracket.
+       //the bug has probably something to do with node stacking inside jsep
        return output;
      }
      catch(e)
@@ -175,7 +191,6 @@ Structure = function(s)
        {
          output.result = inv;
          output.log.push([inv,exp[1],exp[2],op.inverseSymbol,node.type,node.index,exp[0]]);
-         //console.log([inv,exp[1],exp[2],op.symbol,node.type,exp[0]]);
          return [inv,exp[1],exp[2],op.symbol,node.type,node.index,exp[0]];
        }
      }

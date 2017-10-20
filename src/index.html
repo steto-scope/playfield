@@ -14,10 +14,10 @@
     <script src="js/structure.js"></script>
     <script src="js/htmlgenerator.js"></script>
     <script src="js/jsep/jsep.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="js/jquery-ui/jquery-ui.css">
     <link rel="stylesheet" href="playfield.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/jquery-ui/external/jquery/jquery.js"></script>
+    <script src="js/jquery-ui/jquery-ui.js"></script>
   </head>
   <body>
     <div class="main">
@@ -192,7 +192,7 @@
                       <legend>Rechnen in <span class="structName"></span></legend>
                       <div class="fscontent">
                         <input type="text" id="calcExpression"></input> <input type="button" id="op1button"></input><input type="button" class="twoOp" id="op2button"></input><br><br>
-                        Ergebnis: <span id="calcResult"></span><br><br>
+                        Ergebnis: <span id="calcResult"></span><br><br><br>
                         Rechnung:<br><div id="exprEvaluation"></div>
                       </div>
                     </fieldset>
@@ -251,7 +251,7 @@
           <table>
             <tr>
               <th>Version:</th>
-              <td>1.0</td>
+              <td>1.1</td>
             </tr>
             <tr>
               <th>Autor:</th>
@@ -288,6 +288,13 @@
         </div>
         <br>
         <ul>
+          <li>
+            <strong>v1.1</strong>
+            <ul>
+              <li>Detaillierte Ergebnisrechnung</li>
+              <li>Externe Abhängigkeiten entfernt</li>
+            </ul>
+          </li>
           <li>
             <strong>v1.0</strong>
             <ul>
@@ -783,10 +790,6 @@ $("#regenerateTable2").on("click",function( event ) {
   current().analyzeStructure();
  updateFields();
 });
-
-addStructure();
-$("#calcExpression").val("1+-1+(1+1)");
-$("#calcExpression").trigger("keyup");
 
   </script>
 </html>

@@ -8,8 +8,8 @@ Die Datei **[playfield.min.html](./playfield.min.html)** ist eine mit inliner "k
 
 ## Erreichte und geplante Versionen
 
-* **v1.0 - [released] - Erzeugen, Manipulieren und Rechnen auf endlichen Gruppen, Ringen und Körpern**
-* v1.1 - [geplant]  - Detailliertere Auswertung von Berechnungen
+* **v1.0 - [released] - Erzeugen, Manipulieren und Rechnen auf endlichen Gruppen, Ringen und Körpern
+* v1.1 - [released]  - Detailliertere Auswertung von Berechnungen**
 * v1.2 - [geplant]  - Detailliertere Strukturanalyse in extra Tab
 * v1.3 - [geplant]  - Verbände und Halbverbände
 * v1.4 - [geplant]  - Erzeugen von Unterstrukturen aus bestehenden

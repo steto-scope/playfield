@@ -119,63 +119,72 @@ function renderStructClass(s)
 }
 
 
+/**
+ * generates the HTML for the detailed expression evaluation
+ * @param {object} output evaluation output returned by Structure.calculateExpression()
+ * @return {string} HTML
+ */
 function renderExpressionEvaluation(output)
 {
-	var o = '<table border=1 class="exprTable">';
-	o+='<tr><td>'+output.str.split('').join('</td><td>')+'</td> <td></td><td></td></tr>';
+	var o = '<pre class="exprResult">';
+	o+=output.str+" = "+output.result+"<br><br>";
 
 	tmpResult = Array(output.log.length);
 
+	//calculates and adds each intermediate step of the expression evaluation
 	for(var i=0; i<output.log.length; i++)
 	{
-		var p = 0;
+		var line ="";
+		var r, l;
 
-		o+='<tr>';
-		//console.log(output.log[i]);
-		var r;
 		if(output.log[i][4] == "BinaryExpression")
 		{
-			//empty cells until the left operator (if needed)
-			if(output.log[i][1]>0)
-				o+='<td colspan="'+output.log[i][1]+'"></td>';
-			//p+=output.log[i][1];
-
-			//get the left and right operand. either directly from the result or, if existent, the intermediate result from one of the previous steps
-			var l = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][6];
+			l = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][6];
 			r = typeof tmpResult[output.log[i][2]] !== "undefined" ? tmpResult[output.log[i][2]] : output.log[i][7];
 
-			o+='<td colspan="'+(output.log[i][5]-output.log[i][1])+'">'+l+'</td>';
-			///p+=output.log[i][5]-output.log[i][1];
+			//spaces until left operand
+			for(var j=0; j<output.log[i][5]-l.toString().length; j++)
+				line+=' ';
 
-/*			if(output.log[i][2]-p-1 > 0)
-				o+='<td colspan="'+(output.log[i][2]-p-1)+'"></td>';
-			p+=(output.log[i][2]-p-1);*/
+			//left operand
+			line+= l;
 
-			o+='<td>'+output.log[i][3]+'</td>';
-			//p++;
+			//spaces until operator
+			for(var j=line.length; j<output.log[i][5]; j++)
+				line+=' ';
 
-			o+='<td colspan="'+(output.log[i][1]+r.length-output.log[i][5]-1)+'">'+r+'</td>';
-			p=(output.log[i][2]+r.toString().length);
+			//operator
+			line+=output.log[i][3];
+
+			//right operand
+			line+=r;
 		}
 		else
 		{
-			if(output.log[i][1]-1>0)
-				o+='<td colspan="'+(output.log[i][1]-1)+'"></td>';
-
 			r = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][6];
-			o+='<td>'+output.log[i][3]+'</td>';
-			o+='<td colspan="'+r.toString().length+'">'+r+'</td>';
-			p=(output.log[i][1]+r.toString().length);
+
+			//spaces until operand
+			for(var j=0; j<output.log[i][1]-1; j++)
+				line+=' ';
+
+			//operator
+			line+=output.log[i][3];
+			//operand
+			line+=r;
 		}
 
-		console.log([p,output.length]);
-		if(output.length-p > 0)
-			o+='<td colspan="'+(output.length-p)+'"></td>';
-		o+='<td>=</td><td>'+output.log[i][0]+'</td>';
+		//spaces until end of the expression
+		for(var j=line.length; j<output.length; j++)
+			line+=' ';
 
-		tmpResult[output.log[i][1]] = output.log[i][0];
-		o+='</tr>';
+		//intermediate result
+		line+=" = ";
+		line+=output.log[i][0];
+
+		//append to the ouput
+		o+=line;
+		o+="<br>";
 	}
-	o+='</table>';
+	o+='</pre>';
 	return o;
 }
