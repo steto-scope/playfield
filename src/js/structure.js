@@ -156,7 +156,7 @@ Structure = function(s)
         throw node.value+" ∉ "+this.set.getSymbol(true);
 
       output.result = node.value;
-      return [node.value,node.index,node.length,node.type,node.value];
+      return [node.value,node.index,node.length,node.type,0,node.value];
      }
 
      //unary operation, like an inverse operator
@@ -174,9 +174,9 @@ Structure = function(s)
        else
        {
          output.result = inv;
-         output.log.push([inv,exp[1],exp[2],op.inverseSymbol,node.type,exp[0]]);
+         output.log.push([inv,exp[1],exp[2],op.inverseSymbol,node.type,node.index,exp[0]]);
          //console.log([inv,exp[1],exp[2],op.symbol,node.type,exp[0]]);
-         return [inv,exp[1],exp[2],op.symbol,node.type,exp[0]];
+         return [inv,exp[1],exp[2],op.symbol,node.type,node.index,exp[0]];
        }
      }
 
@@ -192,8 +192,8 @@ Structure = function(s)
 
        var n = op.map(left[0], right[0]);
        output.result = n;
-       output.log.push([n,left[1],right[1],op.symbol,node.type,left[0],right[0]]);
-       return [n,left[1],right[1],op.symbol,node.type,left[0],right[0]];
+       output.log.push([n,left[1],right[1],op.symbol,node.type,node.index,left[0],right[0]]);
+       return [n,left[1],right[1],op.symbol,node.type,node.index,left[0],right[0]];
      }
    }
 

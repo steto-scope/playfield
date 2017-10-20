@@ -78,6 +78,7 @@ fieldset {
 .exprTable td, .exprTable table {
   padding:0px;
   border-collapse: collapse;
+  font-family: monospace;
 }
 
 

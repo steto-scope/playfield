@@ -128,42 +128,48 @@ function renderExpressionEvaluation(output)
 
 	for(var i=0; i<output.log.length; i++)
 	{
-		var p = output.log[i][1];
+		var p = 0;
 
 		o+='<tr>';
-
-
+		//console.log(output.log[i]);
+		var r;
 		if(output.log[i][4] == "BinaryExpression")
 		{
+			//empty cells until the left operator (if needed)
 			if(output.log[i][1]>0)
 				o+='<td colspan="'+output.log[i][1]+'"></td>';
+			//p+=output.log[i][1];
 
-			var l = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][5];
-			var r = typeof tmpResult[output.log[i][2]] !== "undefined" ? tmpResult[output.log[i][2]] : output.log[i][6];
+			//get the left and right operand. either directly from the result or, if existent, the intermediate result from one of the previous steps
+			var l = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][6];
+			r = typeof tmpResult[output.log[i][2]] !== "undefined" ? tmpResult[output.log[i][2]] : output.log[i][7];
 
-			o+='<td colspan="'+l.toString().length+'">'+l+'</td>';
-			p+=l.toString().length;
+			o+='<td colspan="'+(output.log[i][5]-output.log[i][1])+'">'+l+'</td>';
+			///p+=output.log[i][5]-output.log[i][1];
 
-			if(output.log[i][2]-p-1 > 0)
+/*			if(output.log[i][2]-p-1 > 0)
 				o+='<td colspan="'+(output.log[i][2]-p-1)+'"></td>';
-			p+=(output.log[i][2]-p-1);
+			p+=(output.log[i][2]-p-1);*/
 
 			o+='<td>'+output.log[i][3]+'</td>';
-			o+='<td colspan="'+r.toString().length+'">'+r+'</td>';
-			p+=r.toString().length+1;
+			//p++;
+
+			o+='<td colspan="'+(output.log[i][1]+r.length-output.log[i][5]-1)+'">'+r+'</td>';
+			p=(output.log[i][2]+r.toString().length);
 		}
 		else
 		{
 			if(output.log[i][1]-1>0)
 				o+='<td colspan="'+(output.log[i][1]-1)+'"></td>';
 
-			var r = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][5];
+			r = typeof tmpResult[output.log[i][1]] !== "undefined" ? tmpResult[output.log[i][1]] : output.log[i][6];
 			o+='<td>'+output.log[i][3]+'</td>';
 			o+='<td colspan="'+r.toString().length+'">'+r+'</td>';
-			p+=r.toString().length+1;
+			p=(output.log[i][1]+r.toString().length);
 		}
 
-		if(output.length-p-1 > 0)
+		console.log([p,output.length]);
+		if(output.length-p > 0)
 			o+='<td colspan="'+(output.length-p)+'"></td>';
 		o+='<td>=</td><td>'+output.log[i][0]+'</td>';
 
